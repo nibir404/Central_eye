@@ -1,0 +1,50 @@
+{
+  "total_km": 179775,
+  "government": {
+    "total_km": 79083,
+    "overhead_km": 12120,
+    "underground_km": 66963,
+    "pct_of_total": 43.99,
+    "initiatives": [
+      "Info-Sarker Phase II & III (Connecting 2,600+ Union Parishads)",
+      "Connected Bangladesh (BCC) - 772 Hard-to-reach Unions",
+      "BTCL National Core Transmission Network",
+      "PGCB Fiber along High Voltage Transmission Lines (OPGW)"
+    ]
+  },
+  "private": {
+    "total_km": 100692,
+    "overhead_km": 67507,
+    "underground_km": 33185,
+    "pct_of_total": 56.01,
+    "key_nttns": [
+      "Fiber@Home Limited (Over 50,000 km optical fiber backbone)",
+      "Summit Communications Limited (Over 48,000 km optical fiber network)",
+      "Bahon Limited",
+      "ADN Telecom / BDCOM Nationwide Transmission"
+    ]
+  },
+  "submarine_cables": [
+    {
+      "name": "SMW4 (SEA-ME-WE 4)",
+      "landing_station": "Cox's Bazar",
+      "operational_since": "2006",
+      "capacity": "300 Gbps (Upgraded)",
+      "status": "Active"
+    },
+    {
+      "name": "SMW5 (SEA-ME-WE 5)",
+      "landing_station": "Kuakata, Patuakhali",
+      "operational_since": "2017",
+      "capacity": "1,500 Gbps",
+      "status": "Active"
+    },
+    {
+      "name": "SMW6 (SEA-ME-WE 6)",
+      "landing_station": "Cox's Bazar",
+      "target": "2026/2027",
+      "capacity": "13,200 Gbps",
+      "status": "Under Implementation"
+    }
+  ]
+}

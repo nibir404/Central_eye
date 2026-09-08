@@ -1,0 +1,71 @@
+{
+  "title": "মোবাইল অপারেটরদের অনুকূলে বরাদ্দকৃত অ্যাকসেস তরঙ্গের বর্তমান অবস্থা (Current Status of Access Spectrum Allocated to Mobile Operators)",
+  "bands": [
+    "700 MHz",
+    "900 MHz",
+    "1800 MHz",
+    "2100 MHz",
+    "2.3 GHz",
+    "2.6 GHz",
+    "Total (MHz)"
+  ],
+  "operators": [
+    {
+      "operator": "Grameenphone",
+      "operator_bn": "গ্রামীণফোন",
+      "band_700mhz": 10.0,
+      "band_900mhz": 7.4,
+      "band_1800mhz": 20.0,
+      "band_2100mhz": 20.0,
+      "band_2_3ghz": 0.0,
+      "band_2_6ghz": 60.0,
+      "total_mhz": 117.4,
+      "share_pct": 28.87
+    },
+    {
+      "operator": "Robi Axiata",
+      "operator_bn": "রবি আজিয়াটা",
+      "band_700mhz": 0.0,
+      "band_900mhz": 9.0,
+      "band_1800mhz": 20.0,
+      "band_2100mhz": 15.0,
+      "band_2_3ghz": 0.0,
+      "band_2_6ghz": 60.0,
+      "total_mhz": 104.0,
+      "share_pct": 25.58
+    },
+    {
+      "operator": "Banglalink",
+      "operator_bn": "বাংলালিংক",
+      "band_700mhz": 0.0,
+      "band_900mhz": 5.0,
+      "band_1800mhz": 20.0,
+      "band_2100mhz": 15.0,
+      "band_2_3ghz": 40.0,
+      "band_2_6ghz": 0.0,
+      "total_mhz": 80.0,
+      "share_pct": 19.68
+    },
+    {
+      "operator": "Teletalk",
+      "operator_bn": "টেলিটক",
+      "band_700mhz": 10.0,
+      "band_900mhz": 5.2,
+      "band_1800mhz": 10.0,
+      "band_2100mhz": 10.0,
+      "band_2_3ghz": 30.0,
+      "band_2_6ghz": 0.0,
+      "total_mhz": 65.2,
+      "share_pct": 16.04
+    }
+  ],
+  "band_totals": {
+    "band_700mhz": 20.0,
+    "band_900mhz": 26.6,
+    "band_1800mhz": 70.0,
+    "band_2100mhz": 60.0,
+    "band_2_3ghz": 70.0,
+    "band_2_6ghz": 160.0,
+    "total_mhz": 406.6
+  }
+}

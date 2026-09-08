@@ -1,0 +1,542 @@
+[
+  {
+    "month_bn": "জুলাই, ২০২৬",
+    "month_en": "জুলাই, 2026",
+    "grameenphone_m": 87.01,
+    "robi_m": 58.77,
+    "banglalink_m": 37.84,
+    "teletalk_m": 6.82,
+    "total_subs_m": 190.44
+  },
+  {
+    "month_bn": "জুন, ২০২৬",
+    "month_en": "জুন, 2026",
+    "grameenphone_m": 86.59,
+    "robi_m": 58.57,
+    "banglalink_m": 37.86,
+    "teletalk_m": 6.8,
+    "total_subs_m": 189.83
+  },
+  {
+    "month_bn": "মে, ২০২৬",
+    "month_en": "মে, 2026",
+    "grameenphone_m": 85.9,
+    "robi_m": 58.18,
+    "banglalink_m": 37.71,
+    "teletalk_m": 6.81,
+    "total_subs_m": 188.6
+  },
+  {
+    "month_bn": "এপ্রিল, ২০২৬",
+    "month_en": "এপ্রিল, 2026",
+    "grameenphone_m": 84.96,
+    "robi_m": 57.8,
+    "banglalink_m": 37.49,
+    "teletalk_m": 6.82,
+    "total_subs_m": 187.07
+  },
+  {
+    "month_bn": "মার্চ, ২০২৬",
+    "month_en": "মার্চ, 2026",
+    "grameenphone_m": 84.84,
+    "robi_m": 57.39,
+    "banglalink_m": 37.37,
+    "teletalk_m": 6.82,
+    "total_subs_m": 186.06
+  },
+  {
+    "month_bn": "ফেব্রুয়ারী, ২০২৬",
+    "month_en": "ফেব্রুয়ারী, 2026",
+    "grameenphone_m": 84.36,
+    "robi_m": 57.3,
+    "banglalink_m": 37.35,
+    "teletalk_m": 6.82,
+    "total_subs_m": 185.84
+  },
+  {
+    "month_bn": "জানুয়ারী, ২০২৬",
+    "month_en": "জানুয়ারী, 2026",
+    "grameenphone_m": 84.33,
+    "robi_m": 57.24,
+    "banglalink_m": 37.4,
+    "teletalk_m": 6.83,
+    "total_subs_m": 185.8
+  },
+  {
+    "month_bn": "ডিসেম্বর, ২০২৫",
+    "month_en": "ডিসেম্বর, 2025",
+    "grameenphone_m": 84.16,
+    "robi_m": 57.4,
+    "banglalink_m": 37.52,
+    "teletalk_m": 6.8,
+    "total_subs_m": 185.89
+  },
+  {
+    "month_bn": "নভেম্বর, ২০২৫",
+    "month_en": "নভেম্বর, 2025",
+    "grameenphone_m": 85.01,
+    "robi_m": 57.57,
+    "banglalink_m": 37.7,
+    "teletalk_m": 6.78,
+    "total_subs_m": 187.06
+  },
+  {
+    "month_bn": "অক্টোবর, ২০২৫",
+    "month_en": "অক্টোবর, 2025",
+    "grameenphone_m": 85.39,
+    "robi_m": 57.54,
+    "banglalink_m": 37.81,
+    "teletalk_m": 6.72,
+    "total_subs_m": 187.46
+  },
+  {
+    "month_bn": "সেপ্টেম্বর, ২০২৫",
+    "month_en": "সেপ্টেম্বর, 2025",
+    "grameenphone_m": 85.85,
+    "robi_m": 57.52,
+    "banglalink_m": 37.93,
+    "teletalk_m": 6.67,
+    "total_subs_m": 187.97
+  },
+  {
+    "month_bn": "অগাস্ট, ২০২৫",
+    "month_en": "অগাস্ট, 2025",
+    "grameenphone_m": 86.47,
+    "robi_m": 57.41,
+    "banglalink_m": 38.05,
+    "teletalk_m": 6.64,
+    "total_subs_m": 188.57
+  },
+  {
+    "month_bn": "জুলাই, ২০২৫",
+    "month_en": "জুলাই, 2025",
+    "grameenphone_m": 86.64,
+    "robi_m": 57.54,
+    "banglalink_m": 38.08,
+    "teletalk_m": 6.61,
+    "total_subs_m": 188.87
+  },
+  {
+    "month_bn": "জুন, ২০২৫",
+    "month_en": "জুন, 2025",
+    "grameenphone_m": 86.51,
+    "robi_m": 57.4,
+    "banglalink_m": 37.95,
+    "teletalk_m": 6.59,
+    "total_subs_m": 188.45
+  },
+  {
+    "month_bn": "মে, ২০২৫",
+    "month_en": "মে, 2025",
+    "grameenphone_m": 86.17,
+    "robi_m": 56.98,
+    "banglalink_m": 37.88,
+    "teletalk_m": 6.58,
+    "total_subs_m": 187.61
+  },
+  {
+    "month_bn": "এপ্রিল, ২০২৫",
+    "month_en": "এপ্রিল, 2025",
+    "grameenphone_m": 85.48,
+    "robi_m": 56.6,
+    "banglalink_m": 38.0,
+    "teletalk_m": 6.56,
+    "total_subs_m": 186.64
+  },
+  {
+    "month_bn": "মার্চ, ২০২৫",
+    "month_en": "মার্চ, 2025",
+    "grameenphone_m": 85.09,
+    "robi_m": 56.36,
+    "banglalink_m": 38.23,
+    "teletalk_m": 6.54,
+    "total_subs_m": 186.22
+  },
+  {
+    "month_bn": "ফেব্রুয়ারী, ২০২৫",
+    "month_en": "ফেব্রুয়ারী, 2025",
+    "grameenphone_m": 84.9,
+    "robi_m": 56.39,
+    "banglalink_m": 38.64,
+    "teletalk_m": 6.56,
+    "total_subs_m": 186.5
+  },
+  {
+    "month_bn": "জানুয়ারি, ২০২৫",
+    "month_en": "জানুয়ারি, 2025",
+    "grameenphone_m": 84.58,
+    "robi_m": 56.4,
+    "banglalink_m": 39.05,
+    "teletalk_m": 6.57,
+    "total_subs_m": 186.59
+  },
+  {
+    "month_bn": "ডিসেম্বর, ২০২৪",
+    "month_en": "ডিসেম্বর, 2024",
+    "grameenphone_m": 84.52,
+    "robi_m": 56.73,
+    "banglalink_m": 39.77,
+    "teletalk_m": 6.56,
+    "total_subs_m": 187.58
+  },
+  {
+    "month_bn": "নভেম্বর, ২০২৪",
+    "month_en": "নভেম্বর, 2024",
+    "grameenphone_m": 84.55,
+    "robi_m": 57.14,
+    "banglalink_m": 40.53,
+    "teletalk_m": 6.56,
+    "total_subs_m": 188.78
+  },
+  {
+    "month_bn": "অক্টোবর ২০২৪",
+    "month_en": "অক্টোবর 2024",
+    "grameenphone_m": 84.74,
+    "robi_m": 57.6,
+    "banglalink_m": 41.07,
+    "teletalk_m": 6.55,
+    "total_subs_m": 189.96
+  },
+  {
+    "month_bn": "সেপ্টেম্বর ২০২৪",
+    "month_en": "সেপ্টেম্বর 2024",
+    "grameenphone_m": 84.83,
+    "robi_m": 57.88,
+    "banglalink_m": 41.63,
+    "teletalk_m": 6.52,
+    "total_subs_m": 190.86
+  },
+  {
+    "month_bn": "আগষ্ট ২০২৪",
+    "month_en": "আগষ্ট 2024",
+    "grameenphone_m": 85.08,
+    "robi_m": 58.36,
+    "banglalink_m": 42.47,
+    "teletalk_m": 6.53,
+    "total_subs_m": 192.43
+  },
+  {
+    "month_bn": "জুলাই ২০২৪",
+    "month_en": "জুলাই 2024",
+    "grameenphone_m": 85.24,
+    "robi_m": 58.92,
+    "banglalink_m": 43.56,
+    "teletalk_m": 6.55,
+    "total_subs_m": 194.26
+  },
+  {
+    "month_bn": "জুন ২০২৪",
+    "month_en": "জুন 2024",
+    "grameenphone_m": 85.53,
+    "robi_m": 59.51,
+    "banglalink_m": 44.48,
+    "teletalk_m": 6.56,
+    "total_subs_m": 196.08
+  },
+  {
+    "month_bn": "মে ২০২৪",
+    "month_en": "মে 2024",
+    "grameenphone_m": 84.91,
+    "robi_m": 58.88,
+    "banglalink_m": 44.73,
+    "teletalk_m": 6.57,
+    "total_subs_m": 195.09
+  },
+  {
+    "month_bn": "এপ্রিল ২০২৪",
+    "month_en": "এপ্রিল 2024",
+    "grameenphone_m": 83.95,
+    "robi_m": 58.51,
+    "banglalink_m": 44.72,
+    "teletalk_m": 6.55,
+    "total_subs_m": 193.73
+  },
+  {
+    "month_bn": "মার্চ ২০২৪",
+    "month_en": "মার্চ 2024",
+    "grameenphone_m": 83.22,
+    "robi_m": 58.07,
+    "banglalink_m": 44.43,
+    "teletalk_m": 6.53,
+    "total_subs_m": 192.26
+  },
+  {
+    "month_bn": "ফেব্রুয়ারি ২০২৪",
+    "month_en": "ফেব্রুয়ারি 2024",
+    "grameenphone_m": 82.58,
+    "robi_m": 58.34,
+    "banglalink_m": 43.96,
+    "teletalk_m": 6.5,
+    "total_subs_m": 191.38
+  },
+  {
+    "month_bn": "জানুয়ারি ২০২৪",
+    "month_en": "জানুয়ারি 2024",
+    "grameenphone_m": 82.27,
+    "robi_m": 58.27,
+    "banglalink_m": 43.44,
+    "teletalk_m": 6.48,
+    "total_subs_m": 190.46
+  },
+  {
+    "month_bn": "ডিসেম্বর ২০২৩",
+    "month_en": "ডিসেম্বর 2023",
+    "grameenphone_m": 82.2,
+    "robi_m": 58.67,
+    "banglalink_m": 43.48,
+    "teletalk_m": 6.46,
+    "total_subs_m": 190.81
+  },
+  {
+    "month_bn": "নভেম্বর ২০২৩",
+    "month_en": "নভেম্বর 2023",
+    "grameenphone_m": 82.14,
+    "robi_m": 58.38,
+    "banglalink_m": 43.38,
+    "teletalk_m": 6.46,
+    "total_subs_m": 190.36
+  },
+  {
+    "month_bn": "অক্টোবর ২০২৩",
+    "month_en": "অক্টোবর 2023",
+    "grameenphone_m": 82.19,
+    "robi_m": 57.96,
+    "banglalink_m": 43.09,
+    "teletalk_m": 6.43,
+    "total_subs_m": 189.67
+  },
+  {
+    "month_bn": "সেপ্টেম্বর ২০২৩",
+    "month_en": "সেপ্টেম্বর 2023",
+    "grameenphone_m": 82.22,
+    "robi_m": 57.62,
+    "banglalink_m": 42.85,
+    "teletalk_m": 6.44,
+    "total_subs_m": 189.13
+  },
+  {
+    "month_bn": "আগস্ট ২০২৩",
+    "month_en": "আগস্ট 2023",
+    "grameenphone_m": 82.14,
+    "robi_m": 57.33,
+    "banglalink_m": 42.72,
+    "teletalk_m": 6.45,
+    "total_subs_m": 188.64
+  },
+  {
+    "month_bn": "জুলাই ২০২৩",
+    "month_en": "জুলাই 2023",
+    "grameenphone_m": 81.89,
+    "robi_m": 56.82,
+    "banglalink_m": 42.3,
+    "teletalk_m": 6.47,
+    "total_subs_m": 187.48
+  },
+  {
+    "month_bn": "জুন ২০২৩",
+    "month_en": "জুন 2023",
+    "grameenphone_m": 81.45,
+    "robi_m": 56.35,
+    "banglalink_m": 41.81,
+    "teletalk_m": 6.49,
+    "total_subs_m": 186.1
+  },
+  {
+    "month_bn": "মে ২০২৩",
+    "month_en": "মে 2023",
+    "grameenphone_m": 81.24,
+    "robi_m": 55.92,
+    "banglalink_m": 41.42,
+    "teletalk_m": 6.54,
+    "total_subs_m": 185.13
+  },
+  {
+    "month_bn": "এপ্রিল ২০২৩",
+    "month_en": "এপ্রিল 2023",
+    "grameenphone_m": 80.59,
+    "robi_m": 55.72,
+    "banglalink_m": 41.32,
+    "teletalk_m": 6.57,
+    "total_subs_m": 184.2
+  },
+  {
+    "month_bn": "মার্চ ২০২৩",
+    "month_en": "মার্চ 2023",
+    "grameenphone_m": 80.3,
+    "robi_m": 55.57,
+    "banglalink_m": 41.39,
+    "teletalk_m": 6.63,
+    "total_subs_m": 183.89
+  },
+  {
+    "month_bn": "ফেব্রুয়ারি ২০২৩",
+    "month_en": "ফেব্রুয়ারি 2023",
+    "grameenphone_m": 79.95,
+    "robi_m": 55.14,
+    "banglalink_m": 40.85,
+    "teletalk_m": 6.67,
+    "total_subs_m": 182.61
+  },
+  {
+    "month_bn": "জানুয়ারি ২০২৩",
+    "month_en": "জানুয়ারি 2023",
+    "grameenphone_m": 79.37,
+    "robi_m": 54.61,
+    "banglalink_m": 40.14,
+    "teletalk_m": 6.68,
+    "total_subs_m": 180.8
+  },
+  {
+    "month_bn": "ডিসেম্বর ২০২২",
+    "month_en": "ডিসেম্বর 2022",
+    "grameenphone_m": 79.29,
+    "robi_m": 54.4,
+    "banglalink_m": 39.81,
+    "teletalk_m": 6.69,
+    "total_subs_m": 180.2
+  },
+  {
+    "month_bn": "নভেম্বর ২০২২",
+    "month_en": "নভেম্বর 2022",
+    "grameenphone_m": 80.34,
+    "robi_m": 54.34,
+    "banglalink_m": 39.46,
+    "teletalk_m": 6.73,
+    "total_subs_m": 180.87
+  },
+  {
+    "month_bn": "অক্টোবর ২০২২",
+    "month_en": "অক্টোবর 2022",
+    "grameenphone_m": 81.41,
+    "robi_m": 54.28,
+    "banglalink_m": 39.23,
+    "teletalk_m": 6.75,
+    "total_subs_m": 181.67
+  },
+  {
+    "month_bn": "সেপ্টেম্বর ২০২২",
+    "month_en": "সেপ্টেম্বর 2022",
+    "grameenphone_m": 81.95,
+    "robi_m": 54.36,
+    "banglalink_m": 38.34,
+    "teletalk_m": 6.78,
+    "total_subs_m": 181.43
+  },
+  {
+    "month_bn": "আগস্ট ২০২২",
+    "month_en": "আগস্ট 2022",
+    "grameenphone_m": 83.15,
+    "robi_m": 54.95,
+    "banglalink_m": 38.76,
+    "teletalk_m": 6.72,
+    "total_subs_m": 183.58
+  },
+  {
+    "month_bn": "জুলাই ২০২২",
+    "month_en": "জুলাই 2022",
+    "grameenphone_m": 84.08,
+    "robi_m": 54.77,
+    "banglalink_m": 38.48,
+    "teletalk_m": 6.71,
+    "total_subs_m": 184.05
+  },
+  {
+    "month_bn": "জুন ২০২২",
+    "month_en": "জুন 2022",
+    "grameenphone_m": 84.8,
+    "robi_m": 54.53,
+    "banglalink_m": 38.37,
+    "teletalk_m": 6.75,
+    "total_subs_m": 184.45
+  },
+  {
+    "month_bn": "মে ২০২২",
+    "month_en": "মে 2022",
+    "grameenphone_m": 84.95,
+    "robi_m": 54.25,
+    "banglalink_m": 38.25,
+    "teletalk_m": 6.78,
+    "total_subs_m": 184.23
+  },
+  {
+    "month_bn": "এপ্রিল ২০২২",
+    "month_en": "এপ্রিল 2022",
+    "grameenphone_m": 84.27,
+    "robi_m": 54.0,
+    "banglalink_m": 38.25,
+    "teletalk_m": 6.86,
+    "total_subs_m": 183.38
+  },
+  {
+    "month_bn": "মার্চ ২০২২",
+    "month_en": "মার্চ 2022",
+    "grameenphone_m": 83.87,
+    "robi_m": 54.07,
+    "banglalink_m": 38.09,
+    "teletalk_m": 6.89,
+    "total_subs_m": 182.92
+  },
+  {
+    "month_bn": "ফেব্রুয়ারি ২০২২",
+    "month_en": "ফেব্রুয়ারি 2022",
+    "grameenphone_m": 83.18,
+    "robi_m": 53.78,
+    "banglalink_m": 37.7,
+    "teletalk_m": 6.88,
+    "total_subs_m": 181.54
+  },
+  {
+    "month_bn": "জানুয়ারি ২০২২",
+    "month_en": "জানুয়ারি 2022",
+    "grameenphone_m": 83.02,
+    "robi_m": 53.57,
+    "banglalink_m": 37.41,
+    "teletalk_m": 6.78,
+    "total_subs_m": 180.78
+  },
+  {
+    "month_bn": "ডিসেম্বর ২০২১",
+    "month_en": "ডিসেম্বর 2021",
+    "grameenphone_m": 83.46,
+    "robi_m": 53.67,
+    "banglalink_m": 37.22,
+    "teletalk_m": 6.67,
+    "total_subs_m": 181.02
+  },
+  {
+    "month_bn": "নভেম্বর ২০২১",
+    "month_en": "নভেম্বর 2021",
+    "grameenphone_m": 84.04,
+    "robi_m": 53.72,
+    "banglalink_m": 37.21,
+    "teletalk_m": 6.56,
+    "total_subs_m": 181.53
+  },
+  {
+    "month_bn": "অক্টোবর ২০২১",
+    "month_en": "অক্টোবর 2021",
+    "grameenphone_m": 84.12,
+    "robi_m": 53.54,
+    "banglalink_m": 37.17,
+    "teletalk_m": 6.49,
+    "total_subs_m": 181.32
+  },
+  {
+    "month_bn": "সেপ্টেম্বর ২০২১",
+    "month_en": "সেপ্টেম্বর 2021",
+    "grameenphone_m": 83.78,
+    "robi_m": 53.04,
+    "banglalink_m": 37.02,
+    "teletalk_m": 6.41,
+    "total_subs_m": 180.25
+  },
+  {
+    "month_bn": "আগস্ট ২০২১",
+    "month_en": "আগস্ট 2021",
+    "grameenphone_m": 83.18,
+    "robi_m": 52.26,
+    "banglalink_m": 36.9,
+    "teletalk_m": 6.27,
+    "total_subs_m": 178.61
+  }
+]

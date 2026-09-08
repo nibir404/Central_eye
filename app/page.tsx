@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { flushSync } from 'react-dom';
 import InfrastructureScene from './infrastructure-scene';
 import {
@@ -15,6 +15,11 @@ import {
   TelemetryEvent,
   PipelineScenario,
 } from '@/lib/telemetry-pipeline';
+import {
+  POWERGRID_METADATA,
+  POWERGRID_RECENT_HOURLY,
+  PowerGridRecord,
+} from '@/lib/powergrid-electricity';
 import {
   Activity,
   ArrowDownToLine,
@@ -79,26 +84,62 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
+import { INFRASTRUCTURE_ASSETS, InfrastructureAsset } from '@/lib/infrastructure-assets';
+import BtrcTelecomViews from '@/components/btrc-telecom-views';
+import {
+  BTRC_METADATA,
+  TELCO_SUBMENU_ITEMS,
+  TelcoSubMenuId,
+} from '@/lib/btrc-telecom';
 
 const sourceBtrc = 'https://btrc.portal.gov.bd/pages/static-pages/6922dda8933eb65569e15c3d';
 const sourcePower = 'https://bpdb.portal.gov.bd/pages/static-pages/6922e134933eb65569e2ad95';
 const divisions = ['All Bangladesh', 'Dhaka', 'Chattogram', 'Rajshahi', 'Khulna', 'Barishal', 'Sylhet', 'Rangpur', 'Mymensingh'];
 
-type Asset = { id: string; name: string; sector: string; kind: string; division: string; lat: number; lon: number; owner: string; capacity: string; status: string };
+type Asset = InfrastructureAsset;
+const assets: Asset[] = INFRASTRUCTURE_ASSETS;
 
-const assets: Asset[] = [
-  { id: 'P-01', name: 'Payra Power Plant', sector: 'Electricity', kind: 'Power plant', division: 'Barishal', lat: 21.99, lon: 90.28, owner: 'BCPCL', capacity: '1,320 MW', status: 'Normal' },
-  { id: 'P-02', name: 'Kaptai Hydropower Plant', sector: 'Electricity', kind: 'Power plant', division: 'Chattogram', lat: 22.49, lon: 92.22, owner: 'BPDB', capacity: '230 MW', status: 'Normal' },
-  { id: 'P-03', name: 'Ghorashal Power Station', sector: 'Electricity', kind: 'Power plant', division: 'Dhaka', lat: 23.98, lon: 90.64, owner: 'BPDB', capacity: 'Multi-unit station', status: 'Watch' },
-  { id: 'P-04', name: 'Bheramara Grid Hub', sector: 'Electricity', kind: 'Grid hub', division: 'Khulna', lat: 24.03, lon: 88.99, owner: 'Power Grid Bangladesh', capacity: 'Interconnection', status: 'Normal' },
-  { id: 'P-05', name: 'Ashuganj Power Station', sector: 'Electricity', kind: 'Power plant', division: 'Chattogram', lat: 24.04, lon: 91.01, owner: 'APSCL', capacity: 'Multi-unit station', status: 'Normal' },
-  { id: 'T-01', name: 'BTRC Headquarters', sector: 'Telecom', kind: 'Regulatory office', division: 'Dhaka', lat: 23.78, lon: 90.42, owner: 'BTRC', capacity: 'Regulatory authority', status: 'Normal' },
-  { id: 'T-02', name: 'Kuakata Cable Landing Station', sector: 'Telecom', kind: 'Cable landing', division: 'Barishal', lat: 21.84, lon: 90.12, owner: 'BSCPLC', capacity: 'SEA-ME-WE 5', status: 'Normal' },
-  { id: 'T-03', name: 'Cox’s Bazar Cable Landing', sector: 'Telecom', kind: 'Cable landing', division: 'Chattogram', lat: 21.43, lon: 91.98, owner: 'BSCPLC', capacity: 'SEA-ME-WE 4', status: 'Watch' },
-  { id: 'D-01', name: 'Sylhet Network Hub', sector: 'Telecom', kind: 'Network hub', division: 'Sylhet', lat: 24.89, lon: 91.87, owner: 'Sylhet Telecom', capacity: 'Primary Fiber Node', status: 'Critical' },
-  { id: 'D-02', name: 'Rangpur Grid Hub', sector: 'Electricity', kind: 'Grid hub', division: 'Rangpur', lat: 25.74, lon: 89.27, owner: 'NESCO', capacity: 'Substation 132/33kV', status: 'Normal' },
-  { id: 'D-03', name: 'Rajshahi Network Hub', sector: 'Telecom', kind: 'Network hub', division: 'Rajshahi', lat: 24.37, lon: 88.60, owner: 'BTCL', capacity: 'Regional Switching Center', status: 'Normal' },
-  { id: 'D-04', name: 'Mymensingh Grid Hub', sector: 'Electricity', kind: 'Grid hub', division: 'Mymensingh', lat: 24.75, lon: 90.40, owner: 'PDB', capacity: 'Substation 132/33kV', status: 'Normal' },
+const POWER_GRID_LINES = [
+  ['P-PAYRA', 'P-AMINBAZAR'],
+  ['P-RAMPAL', 'P-AMINBAZAR'],
+  ['P-MEGHNAGHAT', 'P-AMINBAZAR'],
+  ['P-GHORASHAL', 'P-MEGHNAGHAT'],
+  ['P-ASHUGANJ', 'P-MEGHNAGHAT'],
+  ['P-BIBIYANA', 'P-ASHUGANJ'],
+  ['P-TRIPURA-IMPORT', 'P-HATHAZARI'],
+  ['P-MATARBARI', 'P-HATHAZARI'],
+  ['P-KAPTAI', 'P-HATHAZARI'],
+  ['P-HATHAZARI', 'P-ASHUGANJ'],
+  ['P-SIRAJGANJ', 'P-AMINBAZAR'],
+  ['P-ROOPPUR', 'P-SIRAJGANJ'],
+  ['P-BHERAMARA-HVDC', 'P-ROOPPUR'],
+  ['P-BOGRA-GRID', 'P-SIRAJGANJ'],
+  ['P-ADANI-IMPORT', 'P-BOGRA-GRID'],
+  ['P-BARAPUKURIA', 'P-BOGRA-GRID'],
+  ['P-TEESTA-SOLAR', 'P-BOGRA-GRID'],
+  ['P-MYM-GRID', 'P-GHORASHAL'],
+];
+
+const OPTICAL_FIBER_ROUTES = [
+  ['T-SMW4', 'T-SUMMIT-TOWER'],
+  ['T-SUMMIT-TOWER', 'T-BTRC-HQ'],
+  ['T-SMW5', 'T-KIRTONKHOLA'],
+  ['T-KIRTONKHOLA', 'T-BTRC-HQ'],
+  ['T-BTRC-HQ', 'T-GP-NOC'],
+  ['T-BTRC-HQ', 'T-ROBI-NOC'],
+  ['T-BTRC-HQ', 'T-BL-NOC'],
+  ['T-BTRC-HQ', 'T-TELETALK-NOC'],
+  ['T-BTRC-HQ', 'T-EDOTCO-HUB'],
+  ['T-BTRC-HQ', 'T-BTCL-MOGBAZAR'],
+  ['T-BTRC-HQ', 'T-FIBERATHOME'],
+  ['T-BTRC-HQ', 'T-SUMMIT-FIBER'],
+  ['T-FIBERATHOME', 'T-SYLHET-HUB'],
+  ['T-SUMMIT-FIBER', 'T-KHULNA-NODE'],
+  ['T-BTCL-MOGBAZAR', 'T-MYM-NODE'],
+  ['T-BTCL-MOGBAZAR', 'T-FRONTIER'],
+  ['T-FRONTIER', 'T-RANGPUR-TOWER'],
+  ['T-BTCL-MOGBAZAR', 'T-INFOSARKER-CORE'],
+  ['T-BTRC-HQ', 'T-VOIP-SURVEILLANCE'],
 ];
 
 const incidents = [
@@ -173,8 +214,54 @@ export default function Home() {
   const [severity, setSeverity] = useState('All severity');
   const [ack, setAck] = useState<string[]>([]);
   const [notice, setNotice] = useState('');
+  const [telcoSubTabId, setTelcoSubTabId] = useState<TelcoSubMenuId>('teledensity');
   const [telcoSubTab, setTelcoSubTab] = useState<'Overview & Market Share' | 'QoS & Performance' | 'Infrastructure & BTS' | 'District Ranking & Outages'>('Overview & Market Share');
   const [districtSearch, setDistrictSearch] = useState('');
+  const [electricitySubTab, setElectricitySubTab] = useState<
+    'Grid Balance & Overview' | 'Fuel Mix & Imports' | 'Hourly Demand Curves' | 'PowerGrid Historical Log'
+  >('Grid Balance & Overview');
+  const [pgSearch, setPgSearch] = useState('');
+  const [pgFilterRemark, setPgFilterRemark] = useState<'All' | 'Peaks' | 'Loadshed'>('All');
+  const [pgPage, setPgPage] = useState(1);
+
+  const downloadPowerGridJSON = () => {
+    const a = document.createElement('a');
+    a.href = '/data/powergrid_unified.json';
+    a.download = 'powergrid_bangladesh_scraped.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setNotice('Downloading complete PowerGrid dataset (3,570 records)');
+  };
+
+  const downloadPowerGridCSV = () => {
+    const headers = ['date', 'time', 'demand_mw', 'supply_mw', 'loadshed_mw', 'total_gen_mw', 'gas_mw', 'coal_mw', 'liquid_fuel_mw', 'hydro_mw', 'solar_mw', 'wind_mw', 'imports_mw', 'remark'];
+    const rows = POWERGRID_RECENT_HOURLY.map((r) => [
+      r.date,
+      r.time,
+      r.demand_mw,
+      r.supply_mw,
+      r.loadshed_mw,
+      r.total_gen_mw ?? 0,
+      r.gas_mw ?? 0,
+      r.coal_mw ?? 0,
+      r.liquid_fuel_mw ?? 0,
+      r.hydro_mw ?? 0,
+      r.solar_mw ?? 0,
+      r.wind_mw ?? 0,
+      r.cross_border?.total_imports_mw ?? 0,
+      `"${(r.remark || '').replace(/"/g, '""')}"`
+    ]);
+    const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map((e) => e.join(','))].join('\n');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'powergrid_bangladesh_hourly.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setNotice('Exported PowerGrid CSV data');
+  };
 
   // Pipeline state
   const [isStreaming, setIsStreaming] = useState(true);
@@ -410,10 +497,27 @@ export default function Home() {
                 ))}
               </g>
               {layers.includes('Connections') &&
-                filtered.slice(1).map((a) => {
-                  const from = xy(filtered[0]),
-                    to = xy(a);
-                  return <path key={a.id} d={`M${from.x} ${from.y}Q${(from.x + to.x) / 2 + 40} ${(from.y + to.y) / 2 - 50} ${to.x} ${to.y}`} className={'connection ' + (a.sector === 'Telecom' ? 'fiber' : '')} />;
+                (sector === 'Electricity'
+                  ? POWER_GRID_LINES
+                  : sector === 'Telecom'
+                  ? OPTICAL_FIBER_ROUTES
+                  : [...POWER_GRID_LINES, ...OPTICAL_FIBER_ROUTES]
+                ).map(([fromId, toId], idx) => {
+                  const fromAsset = assets.find((a) => a.id === fromId);
+                  const toAsset = assets.find((a) => a.id === toId);
+                  if (!fromAsset || !toAsset) return null;
+                  if (division !== 'All Bangladesh' && fromAsset.division !== division && toAsset.division !== division) return null;
+                  const from = xy(fromAsset),
+                    to = xy(toAsset);
+                  const isTelco = fromAsset.sector === 'Telecom';
+                  return (
+                    <path
+                      key={idx}
+                      d={`M${from.x} ${from.y}Q${(from.x + to.x) / 2 + 20} ${(from.y + to.y) / 2 - 20} ${to.x} ${to.y}`}
+                      className={'connection ' + (isTelco ? 'fiber' : '')}
+                      stroke={isTelco ? '#48a989' : '#e3bf75'}
+                    />
+                  );
                 })}
               {[
                 { name: 'RANGPUR', lon: 89.1, lat: 26.08 },
@@ -518,7 +622,7 @@ export default function Home() {
         <SidebarHeader>
           <div className="brand">
             <span className="brand-icon">
-              <Layers size={23} />
+              <img src="/puku-ai.png" alt="PUKU-AI Logo" className="brand-logo-img" />
             </span>
             <div>
               Central Eye<span>INFRASTRUCTURE INTELLIGENCE</span>
@@ -537,14 +641,75 @@ export default function Home() {
             <span className="nav-label">WORKSPACE</span>
             <SidebarMenu>
               {nav.map(([name, Icon]) => (
-                <SidebarMenuItem key={name}>
-                  <SidebarMenuButton isActive={page === name} onClick={() => go(name)}>
-                    <Icon />
-                    <span>{name}</span>
-                    {name === 'Incidents' && <b className="nav-count">3</b>}
-                    {name === 'Live Telemetry' && <span className="tiny" style={{ background: 'var(--primary)', color: '#fff', border: 'none' }}>STREAM</span>}
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
+                <React.Fragment key={name}>
+                  <SidebarMenuItem>
+                    <SidebarMenuButton isActive={page === name} onClick={() => go(name)}>
+                      <Icon />
+                      <span>{name}</span>
+                      {name === 'Incidents' && <b className="nav-count">3</b>}
+                      {name === 'Live Telemetry' && <span className="tiny" style={{ background: 'var(--primary)', color: '#fff', border: 'none' }}>STREAM</span>}
+                      {name === 'Telecom' && (
+                        <span className="tiny" style={{ background: 'var(--subtle)', color: 'var(--primary)', border: '1px solid var(--border)' }}>
+                          BTRC
+                        </span>
+                      )}
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+
+                  {name === 'Telecom' && (
+                    <div
+                      style={{
+                        paddingLeft: '14px',
+                        margin: '2px 0 6px 8px',
+                        borderLeft: '2px solid var(--border)',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '2px',
+                      }}
+                    >
+                      <div style={{ fontSize: '10px', fontWeight: 700, color: 'var(--muted-foreground)', padding: '4px 6px 2px', letterSpacing: '0.6px' }}>
+                        পরিসংখ্যান
+                      </div>
+                      {TELCO_SUBMENU_ITEMS.map((item) => {
+                        const isSubActive = page === 'Telecom' && telcoSubTabId === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => {
+                              go('Telecom');
+                              setTelcoSubTabId(item.id);
+                            }}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              width: '100%',
+                              padding: '5px 8px',
+                              borderRadius: '6px',
+                              fontSize: '11px',
+                              textAlign: 'left',
+                              background: isSubActive ? 'var(--sidebar-accent)' : 'transparent',
+                              color: isSubActive ? 'var(--sidebar-accent-foreground)' : 'var(--sidebar-foreground)',
+                              fontWeight: isSubActive ? 600 : 400,
+                              border: 'none',
+                              cursor: 'pointer',
+                              transition: 'all 0.15s ease',
+                            }}
+                          >
+                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                              {item.title_bn}
+                            </span>
+                            {item.countBadge && (
+                              <span style={{ fontSize: '9px', opacity: 0.75, flexShrink: 0, marginLeft: '4px' }}>
+                                {item.countBadge}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </React.Fragment>
               ))}
             </SidebarMenu>
           </SidebarGroup>
@@ -621,8 +786,8 @@ export default function Home() {
           </div>
 
           <div className="telemetry-ticker-box">
-            <Activity size={13} style={{ color: 'var(--primary)', flexNone: true }} />
-            <span style={{ color: 'var(--muted-foreground)', flexNone: true }}>Latest Event:</span>
+            <Activity size={13} style={{ color: 'var(--primary)', flex: 'none' }} />
+            <span style={{ color: 'var(--muted-foreground)', flex: 'none' }}>Latest Event:</span>
             <span style={{ color: 'var(--foreground)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis', fontWeight: 500 }}>
               {eventsLog.length > 0 ? `${eventsLog[0].timestamp} [${eventsLog[0].sector}] ${eventsLog[0].message}` : 'Connecting stream...'}
             </span>
@@ -643,14 +808,19 @@ export default function Home() {
                 value={role}
                 onChange={(v) => {
                   setRole(v);
-                  if (v === 'Operations') go('Incidents');
-                  if (v === 'Regulatory') go('Regulation');
-                  if (v === 'Analyst') go('Analytics');
+                  setNotice(`Role switched to ${v}`);
                 }}
-                values={['Executive', 'Operations', 'Regulatory', 'Analyst']}
+                values={['Executive', 'Grid Operator', 'Regulator']}
               />
-              <button className="primary-button" onClick={exportData}>
-                <ArrowDownToLine size={16} /> Export Data
+              <button
+                className="primary-button"
+                onClick={() => {
+                  setDivision('All Bangladesh');
+                  setSector('All sectors');
+                  setNotice('Dashboard filters reset');
+                }}
+              >
+                <RotateCcw size={14} /> Reset filters
               </button>
             </div>
           </div>
@@ -659,14 +829,18 @@ export default function Home() {
             <div>
               <Picker value={division} onChange={setDivision} values={divisions} />
               <Picker value={sector} onChange={setSector} values={['All sectors', 'Electricity', 'Telecom']} />
+              <Picker value={period} onChange={setPeriod} values={['Live pulse', '1 hour', '24 hours', '7 days']} />
               <button
                 className={'quiet-button ' + (saved ? 'saved' : '')}
                 onClick={() => {
                   if (saved) {
-                    const s = JSON.parse(localStorage.getItem('central-eye-view') || '{}');
-                    setDivision(s.division || 'All Bangladesh');
-                    setSector(s.sector || 'All sectors');
-                    setNotice('Saved view restored');
+                    const raw = localStorage.getItem('central-eye-view');
+                    if (raw) {
+                      const v = JSON.parse(raw);
+                      setDivision(v.division);
+                      setSector(v.sector);
+                      setNotice('Restored saved view');
+                    }
                   } else {
                     localStorage.setItem('central-eye-view', JSON.stringify({ division, sector }));
                     setSaved(true);
@@ -689,46 +863,107 @@ export default function Home() {
               {isTelcoView
                 ? [
                     {
-                      label: 'Total Mobile Subscribers',
-                      value: '185.80',
-                      unit: 'Million',
-                      icon: Users,
-                      sub: '131.25M Internet Subs (75.4% Penetration)',
-                      detail: 'Mobile Broadband Penetration: 68.2%',
+                      label: 'টেলিডেনসিটি (Teledensity)',
+                      value: `${BTRC_METADATA.metrics.teledensity_pct}`,
+                      unit: '%',
+                      icon: Signal,
+                      sub: `ইন্টারনেট পেনেট্রেশন: ${BTRC_METADATA.metrics.internet_penetration_pct}%`,
+                      detail: `ফিক্সড ব্রডব্যান্ড: 8.63% · মোবাইল: 68.79%`,
                       color: '#65c7ab',
                       id: 'Mobile subscriptions',
                     },
                     {
-                      label: 'Avg Speed & Latency',
-                      value: `${avgDownloadSpeed}`,
-                      unit: 'Mbps',
-                      icon: Signal,
-                      sub: `Latency: ${avgLatency} ms · Call Drop Rate: 0.38%`,
-                      detail: `Download: ${avgDownloadSpeed} Mbps · Upload: 14.2 Mbps`,
+                      label: 'মোট মোবাইল গ্রাহক (Subscribers)',
+                      value: `${BTRC_METADATA.metrics.total_mobile_subs_m}`,
+                      unit: 'Million',
+                      icon: Users,
+                      sub: `GP 87.0M · Robi 58.8M · BL 37.8M · TT 6.8M`,
+                      detail: `সক্রিয় সিম সংযোগ (BTRC Official)`,
                       color: '#70b8f4',
                       id: 'Mobile subscriptions',
                     },
                     {
-                      label: 'National Data Consumption',
-                      value: '4,280',
-                      unit: 'PB/mo',
-                      icon: Activity,
-                      sub: '14.2 GB / user / month average',
-                      detail: 'Subsea Traffic: 4.10 Tbps active stream',
+                      label: 'মোট ইন্টারনেট গ্রাহক (Internet)',
+                      value: `${BTRC_METADATA.metrics.total_internet_subs_m}`,
+                      unit: 'Million',
+                      icon: Globe2,
+                      sub: `মোবাইল: 121.52M · আইএসপি: 15.23M`,
+                      detail: `৭৭.৪২% জাতীয় ইন্টারনেট ব্যবহারকারী`,
                       color: '#6ccaff',
                       id: 'Subsea Cable Bandwidth',
                     },
                     {
-                      label: 'Total BTS Sites & Fiber',
-                      value: '48,620',
-                      unit: 'BTS',
+                      label: 'অপারেটর টাওয়ার সংখ্যা (Towers)',
+                      value: `${BTRC_METADATA.metrics.total_towers.toLocaleString()}`,
+                      unit: 'Towers',
                       icon: Server,
-                      sub: '42.5% Fiberized Towers · 162.4k km Fiber',
-                      detail: `4G Coverage: 98.4% · 5G Coverage: 14.8%`,
+                      sub: `টাওয়ারকো: 24,728 (53%) · এমএনও: 21,882 (47%)`,
+                      detail: `ফাইবার: 179,775 কি.মি. · তরঙ্গ: 406.6 MHz`,
                       color: '#e6b561',
                       id: 'Subsea Cable Bandwidth',
                     },
                   ].map((m, i) => (
+                    <button className="metric panel" key={m.label} onClick={() => setSource(m.id)}>
+                      <div className="metric-label">
+                        <span>{m.label}</span>
+                        <m.icon size={17} style={{ color: m.color }} />
+                      </div>
+                      <div className="metric-value">
+                        {m.value}
+                        <span>{m.unit}</span>
+                      </div>
+                      <div className="metric-detail" style={{ color: m.color }}>
+                        <span>•</span> {m.detail}
+                      </div>
+                      <div className="metric-bottom">
+                        <span>{m.sub}</span>
+                        <Spark color={m.color} />
+                      </div>
+                    </button>
+                  ))
+                : page === 'Electricity'
+                ? [
+                    {
+                      label: 'Substation Demand',
+                      value: POWERGRID_METADATA.latest_entry.demand_mw.toLocaleString(),
+                      unit: 'MW',
+                      icon: Zap,
+                      sub: `Supply: ${POWERGRID_METADATA.latest_entry.supply_mw.toLocaleString()} MW · Gen: ${(POWERGRID_METADATA.latest_entry.total_gen_mw ?? 0).toLocaleString()} MW`,
+                      detail: `Power Grid Bangladesh · Deficit: ${((POWERGRID_METADATA.latest_entry.loadshed_mw / POWERGRID_METADATA.latest_entry.demand_mw) * 100).toFixed(1)}%`,
+                      color: POWERGRID_METADATA.latest_entry.loadshed_mw > 1000 ? '#ed9786' : '#e6b561',
+                      id: 'Grid-installed capacity',
+                    },
+                    {
+                      label: 'Active Load Shedding',
+                      value: POWERGRID_METADATA.latest_entry.loadshed_mw.toLocaleString(),
+                      unit: 'MW',
+                      icon: RefreshCw,
+                      sub: `7d Avg Shedding: ${POWERGRID_METADATA.stats_7d.avg_loadshed_mw} MW (Peak: ${POWERGRID_METADATA.stats_7d.max_loadshed_mw} MW)`,
+                      detail: `Rotational shedding active across grid substations`,
+                      color: '#ed9786',
+                      id: 'Active Load Shedding',
+                    },
+                    {
+                      label: 'Cross-Border Power Imports',
+                      value: (POWERGRID_METADATA.latest_entry.cross_border?.total_imports_mw ?? 2409).toLocaleString(),
+                      unit: 'MW',
+                      icon: Server,
+                      sub: `Adani: ${POWERGRID_METADATA.latest_entry.cross_border?.india_adani_mw} MW · Bheramara: ${POWERGRID_METADATA.latest_entry.cross_border?.india_bheramara_mw} MW · Tripura: ${POWERGRID_METADATA.latest_entry.cross_border?.india_tripura_mw} MW`,
+                      detail: `${(((POWERGRID_METADATA.latest_entry.cross_border?.total_imports_mw ?? 2409) / (POWERGRID_METADATA.latest_entry.total_gen_mw || 1)) * 100).toFixed(1)}% of total generation mix`,
+                      color: '#70b8f4',
+                      id: 'Grid-installed capacity',
+                    },
+                    {
+                      label: 'Total Generation Fuel Mix',
+                      value: (POWERGRID_METADATA.latest_entry.total_gen_mw ?? 15344).toLocaleString(),
+                      unit: 'MW',
+                      icon: Activity,
+                      sub: `Coal: ${(POWERGRID_METADATA.latest_entry.coal_mw ?? 0).toLocaleString()} MW · Gas: ${(POWERGRID_METADATA.latest_entry.gas_mw ?? 0).toLocaleString()} MW · Oil: ${(POWERGRID_METADATA.latest_entry.liquid_fuel_mw ?? 0).toLocaleString()} MW`,
+                      detail: `9 Fuel sources + Cross-border interconnectors`,
+                      color: '#65c7ab',
+                      id: 'Grid-installed capacity',
+                    },
+                  ].map((m) => (
                     <button className="metric panel" key={m.label} onClick={() => setSource(m.id)}>
                       <div className="metric-label">
                         <span>{m.label}</span>
@@ -823,7 +1058,7 @@ export default function Home() {
                   <p className="metadata">Real-time telemetry signals</p>
                   {[
                     ['Electricity Shortage', totalShortage > 500 ? 'Critical Deficit' : 'Active Shedding', `${totalShortage} MW shortage (${totalLoadShed} MW shedding)`],
-                    ['Telco 3G/4G/5G Network', avgUptime < 97 ? 'Attention' : 'Normal', `Site Uptime: ${avgUptime}% · ${activeTowers.toLocaleString()} towers live`],
+                    ['Telco 3G/4G/5G Network', Number(avgUptime) < 97 ? 'Attention' : 'Normal', `Site Uptime: ${avgUptime}% · ${activeTowers.toLocaleString()} towers live`],
                     ['Subsea Fiber Landing', 'Optimal', `Traffic: ${(totalTrafficGbps / 1000).toFixed(2)} Tbps (SEA-ME-WE 4/5)`],
                   ].map(([n, s, d], i) => (
                     <div className="health-row" key={n}>
@@ -832,7 +1067,7 @@ export default function Home() {
                         <strong>{n}</strong>
                         <small>{d}</small>
                       </div>
-                      <Tag tone={i === 0 ? 'red' : i === 1 ? (avgUptime < 97 ? 'amber' : 'green') : 'green'}>{s}</Tag>
+                      <Tag tone={i === 0 ? 'red' : i === 1 ? (Number(avgUptime) < 97 ? 'amber' : 'green') : 'green'}>{s}</Tag>
                     </div>
                   ))}
                 </section>
@@ -863,24 +1098,96 @@ export default function Home() {
             </div>
           )}
 
-          {/* DEDICATED TELECOM COMMAND PAGE WITH SUB-MENUS & ALL 20 METRICS + DIAGRAMS */}
-          {page === 'Telecom' && (
+          {/* DEDICATED ELECTRICITY COMMAND PAGE POWERED BY LIVE POWER GRID BANGLADESH PLC SCRAPED DATA */}
+          {page === 'Electricity' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              {/* Telecom Sub-Navigation Bar */}
+              {/* PowerGrid Source Banner & Actions */}
+              <div
+                className="panel"
+                style={{
+                  padding: '20px 24px',
+                  background: 'linear-gradient(135deg, color-mix(in srgb, var(--card) 90%, #f6bf6515), var(--background))',
+                  borderColor: '#f6bf6555',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  flexWrap: 'wrap',
+                  gap: '16px',
+                }}
+              >
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '6px', flexWrap: 'wrap' }}>
+                    <span style={{ background: '#f6bf6520', color: '#e5a53d', padding: '3px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '5px' }}>
+                      <Zap size={14} /> POWER GRID BANGLADESH PLC (PGCB)
+                    </span>
+                    <Tag tone="green">LIVE SCRAPED DATA</Tag>
+                    <span style={{ fontSize: '12px', color: 'var(--muted-foreground)' }}>
+                      {POWERGRID_METADATA.total_unified_records.toLocaleString()} Records Scraped · {POWERGRID_METADATA.date_range.earliest} to {POWERGRID_METADATA.date_range.latest}
+                    </span>
+                  </div>
+                  <h2 style={{ fontSize: '20px', fontWeight: 650, margin: '2px 0 6px' }}>
+                    National Electricity Generation, Demand & Load Shedding Intelligence
+                  </h2>
+                  <p style={{ fontSize: '13px', color: 'var(--muted-foreground)', maxWidth: '900px', lineHeight: 1.5 }}>
+                    Hourly real-time telemetry aggregated from Power Grid Bangladesh official ERP portals: Substation Demand, Actual Grid Supply, Rotational Loadshedding, and Generation Breakdown across 9 Fuel Types & Cross-Border Transmission Lines.
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  <a
+                    href="https://erp.powergrid.gov.bd/web/generations/view_demand_supply_loadshed_bn"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="quiet-button"
+                    style={{ border: '1px solid var(--border)', borderRadius: '7px', fontSize: '12px', background: 'var(--card)' }}
+                    title="Open official Demand, Supply & Loadshed Portal"
+                  >
+                    <span>Demand & Loadshed Portal</span>
+                    <ArrowUpRight size={14} />
+                  </a>
+                  <a
+                    href="https://erp.powergrid.gov.bd/w/generations/view_generations_bn"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="quiet-button"
+                    style={{ border: '1px solid var(--border)', borderRadius: '7px', fontSize: '12px', background: 'var(--card)' }}
+                    title="Open official Hourly Generation by Fuel Portal"
+                  >
+                    <span>Generation Portal</span>
+                    <ArrowUpRight size={14} />
+                  </a>
+                  <button
+                    className="primary-button"
+                    onClick={downloadPowerGridCSV}
+                    style={{ fontSize: '12px', padding: '8px 14px' }}
+                  >
+                    <Download size={14} /> Export CSV
+                  </button>
+                  <button
+                    className="quiet-button"
+                    onClick={downloadPowerGridJSON}
+                    style={{ border: '1px solid var(--border)', borderRadius: '7px', fontSize: '12px', background: 'var(--card)' }}
+                  >
+                    <Database size={14} /> Scraped JSON (3,570)
+                  </button>
+                </div>
+              </div>
+
+              {/* Electricity Sub-Navigation Bar */}
               <div style={{ display: 'flex', gap: '10px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', flexWrap: 'wrap' }}>
                 {[
-                  ['Overview & Market Share', PieChart],
-                  ['QoS & Performance', BarChart3],
-                  ['Infrastructure & BTS', Server],
-                  ['District Ranking & Outages', Award],
+                  ['Grid Balance & Overview', Zap],
+                  ['Fuel Mix & Imports', Layers],
+                  ['Hourly Demand Curves', TrendingUp],
+                  ['PowerGrid Historical Log', Database],
                 ].map(([tabName, Icon]) => (
                   <button
                     key={tabName as string}
-                    onClick={() => setTelcoSubTab(tabName as any)}
+                    onClick={() => setElectricitySubTab(tabName as any)}
                     className="quiet-button"
                     style={{
-                      background: telcoSubTab === tabName ? 'var(--primary)' : 'var(--subtle)',
-                      color: telcoSubTab === tabName ? '#fff' : 'var(--muted-foreground)',
+                      background: electricitySubTab === tabName ? 'var(--primary)' : 'var(--subtle)',
+                      color: electricitySubTab === tabName ? '#fff' : 'var(--muted-foreground)',
                       border: '1px solid var(--border)',
                       borderRadius: '8px',
                       padding: '8px 16px',
@@ -894,405 +1201,618 @@ export default function Home() {
                 ))}
               </div>
 
-              {/* Sub-Tab 1: Overview & Market Share */}
-              {telcoSubTab === 'Overview & Market Share' && (
+              {/* Sub-Tab 1: Grid Balance & Overview */}
+              {electricitySubTab === 'Grid Balance & Overview' && (
                 <>
                   <div className="map-layout expanded">{map}</div>
 
                   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
-                    {/* Market-Share Donut / Bar Visualization */}
+                    {/* Real-time Substation Demand vs Supply */}
                     <section className="panel data-panel">
                       <div className="section-top">
-                        <h2>Mobile Operator Market Share & Subscriber Totals</h2>
-                        <Tag tone="green">BTRC 2026</Tag>
+                        <h2>Live Grid Balance (Substation End)</h2>
+                        <Tag tone={POWERGRID_METADATA.latest_entry.loadshed_mw > 1000 ? 'red' : 'amber'}>
+                          DEFICIT: {((POWERGRID_METADATA.latest_entry.loadshed_mw / POWERGRID_METADATA.latest_entry.demand_mw) * 100).toFixed(1)}%
+                        </Tag>
                       </div>
-                      <p className="metadata">Total Mobile Subscribers: 185.80 Million</p>
-                      {operatorsData.map((op) => {
-                        const pct = ((op.subscribersM / 185.8) * 100).toFixed(1);
-                        return (
-                          <div key={op.operator} style={{ marginTop: '16px' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 600 }}>
-                              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                <i className="dot" style={{ background: op.color, width: '10px', height: '10px' }} />
-                                {op.operator}
-                              </span>
-                              <span>
-                                {op.subscribersM.toFixed(2)}M ({pct}%)
-                              </span>
+                      <p className="metadata">
+                        Snapshot: {POWERGRID_METADATA.latest_entry.date} at {POWERGRID_METADATA.latest_entry.time} BST · Substation telemetry
+                      </p>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginTop: '16px' }}>
+                        <div style={{ padding: '14px', borderRadius: '8px', background: 'var(--subtle)', border: '1px solid var(--border)' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--muted-foreground)', display: 'block' }}>SUBSTATION DEMAND</span>
+                          <strong style={{ fontSize: '22px', fontWeight: 650, color: '#f0b452' }}>
+                            {POWERGRID_METADATA.latest_entry.demand_mw.toLocaleString()} <span style={{ fontSize: '12px' }}>MW</span>
+                          </strong>
+                        </div>
+                        <div style={{ padding: '14px', borderRadius: '8px', background: 'var(--subtle)', border: '1px solid var(--border)' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--muted-foreground)', display: 'block' }}>GRID SUPPLY</span>
+                          <strong style={{ fontSize: '22px', fontWeight: 650, color: '#48a989' }}>
+                            {POWERGRID_METADATA.latest_entry.supply_mw.toLocaleString()} <span style={{ fontSize: '12px' }}>MW</span>
+                          </strong>
+                        </div>
+                        <div style={{ padding: '14px', borderRadius: '8px', background: 'var(--subtle)', border: '1px solid var(--border)' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--muted-foreground)', display: 'block' }}>LOAD SHEDDING</span>
+                          <strong style={{ fontSize: '22px', fontWeight: 650, color: '#ec7b6b' }}>
+                            {POWERGRID_METADATA.latest_entry.loadshed_mw.toLocaleString()} <span style={{ fontSize: '12px' }}>MW</span>
+                          </strong>
+                        </div>
+                      </div>
+
+                      {/* Demand satisfaction bar */}
+                      <div style={{ marginTop: '20px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', marginBottom: '6px' }}>
+                          <span>Supply Coverage Ratio</span>
+                          <strong>{((POWERGRID_METADATA.latest_entry.supply_mw / POWERGRID_METADATA.latest_entry.demand_mw) * 100).toFixed(1)}% Served</strong>
+                        </div>
+                        <div style={{ height: '10px', borderRadius: '5px', background: '#ec7b6b33', overflow: 'hidden', display: 'flex' }}>
+                          <div
+                            style={{
+                              width: `${(POWERGRID_METADATA.latest_entry.supply_mw / POWERGRID_METADATA.latest_entry.demand_mw) * 100}%`,
+                              background: '#48a989',
+                              height: '100%',
+                            }}
+                          />
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--muted-foreground)', marginTop: '4px' }}>
+                          <span>Met by Generation & Imports</span>
+                          <span>Unmet (Rotational Load Shedding)</span>
+                        </div>
+                      </div>
+
+                      {/* Peak events summary */}
+                      <div style={{ marginTop: '22px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+                        <h3 style={{ fontSize: '13px', fontWeight: 600, marginBottom: '10px' }}>Today’s Grid Peak Highlights</h3>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                          <div style={{ padding: '10px', borderRadius: '6px', background: 'var(--subtle)', border: '1px solid var(--border)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Tag tone="amber">Day Peak (12:00 BST)</Tag>
                             </div>
-                            <Progress value={Number(pct)} style={{ height: '8px', marginTop: '6px' }} />
+                            <p style={{ fontSize: '14px', fontWeight: 600, margin: '6px 0 2px' }}>16,076 MW Demand</p>
+                            <small style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Supply: 13,567 MW · Shedding: 2,509 MW · Solar: 662 MW</small>
                           </div>
-                        );
-                      })}
+                          <div style={{ padding: '10px', borderRadius: '6px', background: 'var(--subtle)', border: '1px solid var(--border)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <Tag tone="red">Evening Peak (19:00 BST)</Tag>
+                            </div>
+                            <p style={{ fontSize: '14px', fontWeight: 600, margin: '6px 0 2px' }}>17,280 MW Demand</p>
+                            <small style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Supply: 14,578 MW · Shedding: 2,702 MW · Adani: 1,417 MW</small>
+                          </div>
+                        </div>
+                      </div>
                     </section>
 
-                    {/* Coverage-vs-Adoption Funnel Diagram */}
+                    {/* Cross-border and Interconnection Status */}
                     <section className="panel data-panel">
                       <div className="section-top">
-                        <h2>Coverage vs. Adoption Funnel</h2>
-                        <Tag tone="neutral">NATIONAL DIGITIZATION</Tag>
+                        <h2>Cross-Border Transmission Interconnectors</h2>
+                        <Tag tone="green">TOTAL: {POWERGRID_METADATA.latest_entry.cross_border?.total_imports_mw.toLocaleString()} MW</Tag>
                       </div>
-                      <p className="metadata">Population coverage down to 4G/5G power users.</p>
-                      {[
-                        ['1. Total Population', '173.0M', 100, '#62baf4'],
-                        ['2. 4G Population Covered', '170.2M', 98.4, '#56c4ac'],
-                        ['3. Total Mobile Subscribers', '185.8M', 92.1, '#ac9af2'],
-                        ['4. Internet Subscribers', '131.2M', 75.4, '#ecb663'],
-                        ['5. Active 4G/5G Data Users', '89.4M', 51.7, '#67caae'],
-                      ].map(([label, val, pct, color]) => (
-                        <div key={label as string} style={{ marginTop: '14px' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
-                            <span>{label as string}</span>
-                            <strong>{val as string}</strong>
-                          </div>
-                          <div className="bar-track" style={{ height: '7px', marginTop: '5px' }}>
-                            <span style={{ width: `${pct}%`, background: color as string }} />
-                          </div>
-                        </div>
-                      ))}
-                    </section>
-                  </div>
+                      <p className="metadata">International power import corridors supplying the national transmission grid</p>
 
-                  {/* Digital Divide & Subscriber Trend */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '20px' }}>
-                    <section className="panel trend-panel">
-                      <div className="section-top">
-                        <div>
-                          <h2>Mobile & Fixed Broadband Subscriber Growth</h2>
-                          <p className="metadata">Monthly subscriptions trend (Millions)</p>
-                        </div>
-                      </div>
-                      <div className="chart-legend">
-                        <span>
-                          <i className="dot healthy" />
-                          Mobile Subscriptions (185.80M)
-                        </span>
-                        <span>
-                          <i className="dot dot-0" />
-                          Fixed ISP Broadband (12.45M)
-                        </span>
-                      </div>
-                      <div className="line-chart">
-                        <div className="y-axis">
-                          {['190M', '150M', '100M', '50M'].map((v) => (
-                            <span key={v}>{v}</span>
-                          ))}
-                        </div>
-                        <svg viewBox="0 0 700 150" preserveAspectRatio="none" role="img" aria-label="Subscriber trends">
-                          <polyline points="0,28 116,36 232,51 348,65 464,75 580,104 700,107" fill="none" stroke="#64c7af" strokeWidth="3" />
-                          <polyline points="0,135 116,130 232,125 348,120 464,118 580,114 700,110" fill="none" stroke="#e0b86a" strokeWidth="2" strokeDasharray="4 4" />
-                        </svg>
-                      </div>
-                      <div className="x-axis">
-                        {['Jul 25', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan 26'].map((t) => (
-                          <span key={t}>{t}</span>
+                      <div style={{ marginTop: '16px', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                        {[
+                          {
+                            name: 'India - Adani Godda Dedicated Corridor',
+                            voltage: '400 kV HVDC/HVAC Dedicated Link',
+                            capacity: '1,600 MW',
+                            flow: POWERGRID_METADATA.latest_entry.cross_border?.india_adani_mw ?? 1414,
+                            status: 'Optimal',
+                            share: (((POWERGRID_METADATA.latest_entry.cross_border?.india_adani_mw ?? 1414) / (POWERGRID_METADATA.latest_entry.total_gen_mw || 1)) * 100).toFixed(1),
+                            color: '#70b8f4',
+                          },
+                          {
+                            name: 'India - Bheramara Back-to-Back HVDC',
+                            voltage: '500 kV Back-to-Back Substation (Bahrampur-Bheramara)',
+                            capacity: '1,000 MW',
+                            flow: POWERGRID_METADATA.latest_entry.cross_border?.india_bheramara_mw ?? 823,
+                            status: 'Optimal',
+                            share: (((POWERGRID_METADATA.latest_entry.cross_border?.india_bheramara_mw ?? 823) / (POWERGRID_METADATA.latest_entry.total_gen_mw || 1)) * 100).toFixed(1),
+                            color: '#e5a53d',
+                          },
+                          {
+                            name: 'India - Tripura Transmission Link',
+                            voltage: '400 kV Surjamaninagar - South Comilla',
+                            capacity: '200 MW',
+                            flow: POWERGRID_METADATA.latest_entry.cross_border?.india_tripura_mw ?? 172,
+                            status: 'Optimal',
+                            share: (((POWERGRID_METADATA.latest_entry.cross_border?.india_tripura_mw ?? 172) / (POWERGRID_METADATA.latest_entry.total_gen_mw || 1)) * 100).toFixed(1),
+                            color: '#a78bfa',
+                          },
+                          {
+                            name: 'Nepal - Bangladesh Cross-Border Link',
+                            voltage: 'Scheduled Trilateral Corridor via Indian Grid',
+                            capacity: '40 MW',
+                            flow: POWERGRID_METADATA.latest_entry.cross_border?.nepal_mw ?? 0,
+                            status: 'Scheduled',
+                            share: '0.0',
+                            color: '#94a3b8',
+                          },
+                        ].map((link) => (
+                          <div key={link.name} style={{ padding: '12px', borderRadius: '8px', background: 'var(--subtle)', border: '1px solid var(--border)' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <div>
+                                <strong style={{ fontSize: '13px' }}>{link.name}</strong>
+                                <small style={{ display: 'block', color: 'var(--muted-foreground)', fontSize: '11px', marginTop: '2px' }}>{link.voltage}</small>
+                              </div>
+                              <div style={{ textAlign: 'right' }}>
+                                <span style={{ fontSize: '15px', fontWeight: 700, color: link.color }}>{link.flow} MW</span>
+                                <small style={{ display: 'block', fontSize: '10px', color: 'var(--muted-foreground)' }}>Capacity: {link.capacity}</small>
+                              </div>
+                            </div>
+                            <div className="bar-track" style={{ marginTop: '8px' }}>
+                              <span style={{ width: `${Math.min(100, (link.flow / parseInt(link.capacity.replace(/\D/g, ''))) * 100)}%`, background: link.color }} />
+                            </div>
+                          </div>
                         ))}
                       </div>
                     </section>
-
-                    <section className="panel data-panel">
-                      <div className="section-top">
-                        <h2>National Digital Divide Index</h2>
-                        <Award size={18} style={{ color: 'var(--primary)' }} />
-                      </div>
-                      <div style={{ textAlign: 'center', margin: '20px 0' }}>
-                        <div style={{ fontSize: '42px', fontWeight: 700, color: 'var(--primary)' }}>78.4 <span style={{ fontSize: '16px' }}>/ 100</span></div>
-                        <p className="metadata">National Connectivity Index Score</p>
-                      </div>
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                        <div style={{ background: 'var(--subtle)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-                          <span style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Urban Score</span>
-                          <div style={{ fontSize: '20px', fontWeight: 600, color: '#56c4ac' }}>88.2</div>
-                        </div>
-                        <div style={{ background: 'var(--subtle)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
-                          <span style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Rural Score</span>
-                          <div style={{ fontSize: '20px', fontWeight: 600, color: '#e6b561' }}>68.6</div>
-                        </div>
-                      </div>
-                    </section>
                   </div>
                 </>
               )}
 
-              {/* Sub-Tab 2: QoS & Performance */}
-              {telcoSubTab === 'QoS & Performance' && (
-                <>
-                  {/* QoS Scorecards */}
-                  <div className="metrics">
-                    {[
-                      { label: 'Avg Download Speed', value: `${avgDownloadSpeed}`, unit: 'Mbps', icon: Signal, color: '#56c4ac', detail: 'Target > 20 Mbps (BTRC SLA)' },
-                      { label: 'Avg Network Latency', value: `${avgLatency}`, unit: 'ms', icon: Activity, color: '#70b8f4', detail: 'Target < 35 ms' },
-                      { label: 'Call Drop Rate', value: '0.38%', unit: 'drops', icon: PhoneCall, color: '#e6b561', detail: 'BTRC Benchmark < 1.0%' },
-                      { label: 'Consumer Complaint SLA', value: '94.6%', unit: 'resolved', icon: ShieldCheck, color: '#65c7ab', detail: '14,280 monthly grievances' },
-                    ].map((card) => (
-                      <div className="metric panel" key={card.label}>
-                        <div className="metric-label">
-                          <span>{card.label}</span>
-                          <card.icon size={17} style={{ color: card.color }} />
-                        </div>
-                        <div className="metric-value">
-                          {card.value} <span>{card.unit}</span>
-                        </div>
-                        <div className="metric-detail" style={{ color: card.color }}>
-                          • {card.detail}
-                        </div>
+              {/* Sub-Tab 2: Fuel Mix & Imports */}
+              {electricitySubTab === 'Fuel Mix & Imports' && (
+                <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.3fr) minmax(0, 1fr)', gap: '20px' }}>
+                  {/* Generation by Fuel Breakdown */}
+                  <section className="panel data-panel">
+                    <div className="section-top">
+                      <h2>Real-Time Generation Breakdown by Fuel Type</h2>
+                      <Tag tone="green">TOTAL GEN: {(POWERGRID_METADATA.latest_entry.total_gen_mw ?? 15344).toLocaleString()} MW</Tag>
+                    </div>
+                    <p className="metadata">
+                      Hourly generation telemetry by source · Power Grid Bangladesh PLC
+                    </p>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '20px' }}>
+                      {[
+                        {
+                          name: 'Coal (কয়লা)',
+                          desc: 'Payra, Rampal, Matarbari, Barisal thermal stations',
+                          mw: POWERGRID_METADATA.latest_entry.coal_mw ?? 4888,
+                          color: '#556975',
+                        },
+                        {
+                          name: 'Natural Gas (গ্যাস)',
+                          desc: 'Combined cycle & steam plants (Ashuganj, Ghorashal, Haripur)',
+                          mw: POWERGRID_METADATA.latest_entry.gas_mw ?? 4857,
+                          color: '#e5a53d',
+                        },
+                        {
+                          name: 'Liquid Fuel / HFO (তরল জ্বালানী)',
+                          desc: 'Quick rental and peaking furnace oil / diesel engines',
+                          mw: POWERGRID_METADATA.latest_entry.liquid_fuel_mw ?? 2968,
+                          color: '#ec7b6b',
+                        },
+                        {
+                          name: 'Cross-Border Imports (ভারত ও নেপাল)',
+                          desc: 'Adani 400kV, Bheramara 500kV HVDC, Tripura 400kV lines',
+                          mw: POWERGRID_METADATA.latest_entry.cross_border?.total_imports_mw ?? 2409,
+                          color: '#469bfc',
+                        },
+                        {
+                          name: 'Hydroelectric (হাইড্রো)',
+                          desc: 'Kaptai 230 MW Hydroelectric Power Station (BPDB)',
+                          mw: POWERGRID_METADATA.latest_entry.hydro_mw ?? 222,
+                          color: '#48a989',
+                        },
+                        {
+                          name: 'Solar PV (সৌর)',
+                          desc: 'Grid-connected solar parks (Mymensingh, Teknaf, Sreepur, Sirajganj)',
+                          mw: POWERGRID_METADATA.latest_entry.solar_mw ?? 0,
+                          note: 'Day peak up to 662 MW',
+                          color: '#facc15',
+                        },
+                        {
+                          name: 'Wind Power (বায়ু)',
+                          desc: 'Cox’s Bazar 60 MW Wind Farm & Kutubdia pilots',
+                          mw: POWERGRID_METADATA.latest_entry.wind_mw ?? 0,
+                          note: 'Day peak up to 15 MW',
+                          color: '#38bdf8',
+                        },
+                      ].map((fuel) => {
+                        const total = POWERGRID_METADATA.latest_entry.total_gen_mw || 15344;
+                        const pct = ((fuel.mw / total) * 100).toFixed(1);
+                        return (
+                          <div key={fuel.name}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '13px' }}>
+                              <div>
+                                <strong style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <i className="dot" style={{ background: fuel.color }} />
+                                  {fuel.name}
+                                </strong>
+                                <small style={{ display: 'block', color: 'var(--muted-foreground)', fontSize: '11px', marginTop: '2px' }}>
+                                  {fuel.desc} {fuel.note && `· ${fuel.note}`}
+                                </small>
+                              </div>
+                              <div style={{ textAlign: 'right' }}>
+                                <strong style={{ fontSize: '14px' }}>{fuel.mw.toLocaleString()} MW</strong>
+                                <small style={{ display: 'block', fontSize: '11px', color: 'var(--muted-foreground)' }}>{pct}% of mix</small>
+                              </div>
+                            </div>
+                            <div className="bar-track" style={{ marginTop: '8px' }}>
+                              <span style={{ width: `${pct}%`, background: fuel.color }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </section>
+
+                  {/* Fuel Distribution & Transition Summary */}
+                  <section className="panel data-panel">
+                    <div className="section-top">
+                      <h2>Fuel Mix Portfolio Analysis</h2>
+                      <Activity size={18} />
+                    </div>
+                    <p className="metadata">National energy balance & sustainability profile</p>
+
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '18px', marginTop: '16px' }}>
+                      <div style={{ padding: '16px', borderRadius: '10px', background: 'var(--subtle)', border: '1px solid var(--border)' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--muted-foreground)', fontWeight: 600 }}>THERMAL FOSSIL GENERATION</span>
+                        <h3 style={{ fontSize: '24px', fontWeight: 700, margin: '6px 0 2px', color: '#ec9c8e' }}>
+                          {(
+                            (POWERGRID_METADATA.latest_entry.coal_mw ?? 0) +
+                            (POWERGRID_METADATA.latest_entry.gas_mw ?? 0) +
+                            (POWERGRID_METADATA.latest_entry.liquid_fuel_mw ?? 0)
+                          ).toLocaleString()} MW
+                        </h3>
+                        <p style={{ fontSize: '12px', color: 'var(--muted-foreground)' }}>
+                          {(
+                            (((POWERGRID_METADATA.latest_entry.coal_mw ?? 0) +
+                              (POWERGRID_METADATA.latest_entry.gas_mw ?? 0) +
+                              (POWERGRID_METADATA.latest_entry.liquid_fuel_mw ?? 0)) /
+                              (POWERGRID_METADATA.latest_entry.total_gen_mw || 1)) *
+                            100
+                          ).toFixed(1)}% of total domestic generation is fossil fuel (Coal, Natural Gas, HFO)
+                        </p>
                       </div>
-                    ))}
-                  </div>
 
-                  {/* Operator Comparison Bars */}
-                  <section className="panel data-panel">
-                    <div className="section-top">
-                      <h2>Operator QoS Benchmark Comparison</h2>
-                      <Tag tone="green">BTRC AUDIT</Tag>
-                    </div>
-                    <div className="table-responsive">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            {['Operator', 'DL Speed', 'UL Speed', 'Latency', 'Call Drop Rate', 'Packet Loss', 'BTRC Rating'].map((h) => (
-                              <TableHead key={h}>{h}</TableHead>
-                            ))}
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {operatorsData.map((op) => (
-                            <TableRow key={op.operator}>
-                              <TableCell style={{ fontWeight: 600 }}>
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                                  <i className="dot" style={{ background: op.color }} />
-                                  {op.operator}
-                                </span>
-                              </TableCell>
-                              <TableCell style={{ fontWeight: 600 }}>{op.throughputMbps} Mbps</TableCell>
-                              <TableCell>{op.uploadMbps} Mbps</TableCell>
-                              <TableCell style={{ fontFamily: 'monospace' }}>{op.avgLatencyMs} ms</TableCell>
-                              <TableCell>
-                                <Tag tone={op.callDropRate < 0.4 ? 'green' : 'amber'}>{op.callDropRate}%</Tag>
-                              </TableCell>
-                              <TableCell>{op.packetLossPct}%</TableCell>
-                              <TableCell>
-                                <Tag tone="green">Grade A</Tag>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                      <div style={{ padding: '16px', borderRadius: '10px', background: 'var(--subtle)', border: '1px solid var(--border)' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--muted-foreground)', fontWeight: 600 }}>CROSS-BORDER REGIONAL TRADE</span>
+                        <h3 style={{ fontSize: '24px', fontWeight: 700, margin: '6px 0 2px', color: '#70b8f4' }}>
+                          {(POWERGRID_METADATA.latest_entry.cross_border?.total_imports_mw ?? 2409).toLocaleString()} MW
+                        </h3>
+                        <p style={{ fontSize: '12px', color: 'var(--muted-foreground)' }}>
+                          {(
+                            ((POWERGRID_METADATA.latest_entry.cross_border?.total_imports_mw ?? 2409) /
+                              (POWERGRID_METADATA.latest_entry.total_gen_mw || 1)) *
+                            100
+                          ).toFixed(1)}% supplied via high-voltage international transmission interconnections
+                        </p>
+                      </div>
+
+                      <div style={{ padding: '16px', borderRadius: '10px', background: 'var(--subtle)', border: '1px solid var(--border)' }}>
+                        <span style={{ fontSize: '11px', color: 'var(--muted-foreground)', fontWeight: 600 }}>RENEWABLES & HYDROELECTRIC</span>
+                        <h3 style={{ fontSize: '24px', fontWeight: 700, margin: '6px 0 2px', color: '#65c7ab' }}>
+                          {(
+                            (POWERGRID_METADATA.latest_entry.hydro_mw ?? 0) +
+                            (POWERGRID_METADATA.latest_entry.solar_mw ?? 0) +
+                            (POWERGRID_METADATA.latest_entry.wind_mw ?? 0)
+                          ).toLocaleString()} MW
+                        </h3>
+                        <p style={{ fontSize: '12px', color: 'var(--muted-foreground)' }}>
+                          Hydro (222 MW) + Day Solar peaks up to 662 MW + Wind (up to 15 MW)
+                        </p>
+                      </div>
                     </div>
                   </section>
-
-                  {/* Spectrum-Band Allocation Chart */}
-                  <section className="panel data-panel">
-                    <div className="section-top">
-                      <h2>Spectrum-Band MHz Allocation & Utilization</h2>
-                      <Tag tone="neutral">SPECTRUM REGISTRY</Tag>
-                    </div>
-                    <p className="metadata">Active MHz bandwidth allocated per operator across sub-1GHz, mid-band, and 5G NR prime frequencies.</p>
-                    <div className="table-responsive">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            {['Spectrum Band', 'Frequency Class', 'Grameenphone (MHz)', 'Robi Axiata (MHz)', 'Banglalink (MHz)', 'Teletalk (MHz)', 'Total Bandwidth'].map((h) => (
-                              <TableHead key={h}>{h}</TableHead>
-                            ))}
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {SPECTRUM_BANDS.map((sb) => (
-                            <TableRow key={sb.band}>
-                              <TableCell style={{ fontWeight: 600 }}>{sb.band}</TableCell>
-                              <TableCell>{sb.frequency}</TableCell>
-                              <TableCell>{sb.gpMHz} MHz</TableCell>
-                              <TableCell>{sb.robiMHz} MHz</TableCell>
-                              <TableCell>{sb.blMHz} MHz</TableCell>
-                              <TableCell>{sb.teletalkMHz} MHz</TableCell>
-                              <TableCell style={{ fontWeight: 600, color: 'var(--primary)' }}>{sb.totalMHz} MHz</TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </section>
-                </>
+                </div>
               )}
 
-              {/* Sub-Tab 3: Infrastructure & BTS */}
-              {telcoSubTab === 'Infrastructure & BTS' && (
-                <>
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '20px' }}>
-                    <div className="metric panel">
-                      <div className="metric-label"><span>Total BTS Towers</span><Server size={17} style={{ color: '#56c4ac' }} /></div>
-                      <div className="metric-value">48,620 <span>sites</span></div>
-                      <div className="metric-detail" style={{ color: '#56c4ac' }}>• 42.5% Fiberized Towers</div>
-                    </div>
-                    <div className="metric panel">
-                      <div className="metric-label"><span>NTTN Fiber Deployed</span><Activity size={17} style={{ color: '#70b8f4' }} /></div>
-                      <div className="metric-value">162,400 <span>km</span></div>
-                      <div className="metric-detail" style={{ color: '#70b8f4' }}>• Nationwide Transmission</div>
-                    </div>
-                    <div className="metric panel">
-                      <div className="metric-label"><span>Subsea Landing Stations</span><Globe2 size={17} style={{ color: '#e6b561' }} /></div>
-                      <div className="metric-value">5.4 <span>Tbps</span></div>
-                      <div className="metric-detail" style={{ color: '#e6b561' }}>• SEA-ME-WE 4 & SEA-ME-WE 5</div>
-                    </div>
-                  </div>
-
-                  {/* Subsea Cable & Backbone Fiber Topology */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
-                    {cablesData.map((cable) => (
-                      <section className="panel data-panel" key={cable.name}>
-                        <div className="section-top" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <div>
-                            <h2>{cable.name} Subsea Cable Station</h2>
-                            <p className="metadata">{cable.location}</p>
-                          </div>
-                          <Tag tone={cable.status === 'Optimal' ? 'green' : 'amber'}>{cable.status}</Tag>
-                        </div>
-                        <div style={{ margin: '15px 0' }}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px' }}>
-                            <span>International Bandwidth Stream</span>
-                            <strong>
-                              {cable.activeTrafficGbps} Gbps / {(cable.capacityTbps * 1000).toLocaleString()} Gbps ({cable.utilizationPct}%)
-                            </strong>
-                          </div>
-                          <Progress value={cable.utilizationPct} />
-                        </div>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--muted-foreground)', borderTop: '1px solid var(--border)', paddingTop: '10px' }}>
-                          <span>Latency to Core Hub: {cable.latencyMs} ms</span>
-                          <span>Link Status: {cable.status}</span>
-                        </div>
-                      </section>
-                    ))}
-                  </div>
-
-                  {/* Operator BTS Towers Breakdown */}
+              {/* Sub-Tab 3: Hourly Demand Curves */}
+              {electricitySubTab === 'Hourly Demand Curves' && (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
                   <section className="panel data-panel">
                     <div className="section-top">
-                      <h2>Operator Tower / BTS Sites Breakdown</h2>
-                      <Tag tone="green">INFRASTRUCTURE AUDIT</Tag>
-                    </div>
-                    <div className="table-responsive">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            {['Operator', 'Total BTS Sites', '4G BTS Count', '5G Nodes Count', 'Fiberized Sites %', 'Site Uptime'].map((h) => (
-                              <TableHead key={h}>{h}</TableHead>
-                            ))}
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {operatorsData.map((op) => (
-                            <TableRow key={op.operator}>
-                              <TableCell style={{ fontWeight: 600 }}>
-                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                                  <i className="dot" style={{ background: op.color }} />
-                                  {op.operator}
-                                </span>
-                              </TableCell>
-                              <TableCell style={{ fontWeight: 600 }}>{op.btsSites.toLocaleString()} sites</TableCell>
-                              <TableCell>{Math.round(op.btsSites * 0.82).toLocaleString()}</TableCell>
-                              <TableCell>{Math.round(op.btsSites * 0.08).toLocaleString()}</TableCell>
-                              <TableCell>{(op.tech4G * 0.6).toFixed(1)}%</TableCell>
-                              <TableCell>
-                                <Progress value={op.siteUptimePct} style={{ width: '60px', display: 'inline-block', marginRight: '8px' }} />
-                                <span>{op.siteUptimePct}%</span>
-                              </TableCell>
-                            </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
-                    </div>
-                  </section>
-                </>
-              )}
-
-              {/* Sub-Tab 4: District Ranking & Outages */}
-              {telcoSubTab === 'District Ranking & Outages' && (
-                <>
-                  {/* Best / Worst Performing Districts */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
-                    <section className="panel data-panel" style={{ borderTop: '3px solid #56c4ac' }}>
-                      <div className="section-top">
-                        <h2>Top 5 Best Performing Districts</h2>
-                        <Tag tone="green">TOP CONNECTIVITY</Tag>
-                      </div>
-                      {DISTRICT_RANKINGS.slice(0, 5).map((d) => (
-                        <div key={d.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-                          <div>
-                            <strong>#{d.rank} {d.name}</strong> <small style={{ color: 'var(--muted-foreground)' }}>({d.division})</small>
-                            <p style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Speed: {d.speedMbps} Mbps · Latency: {d.latencyMs}ms</p>
-                          </div>
-                          <Tag tone="green">{d.connectivityIndex} Index</Tag>
-                        </div>
-                      ))}
-                    </section>
-
-                    <section className="panel data-panel" style={{ borderTop: '3px solid #ed9786' }}>
-                      <div className="section-top">
-                        <h2>Top 5 Underserved / Lowest Performing</h2>
-                        <Tag tone="red">DIGITAL DIVIDE FOCUS</Tag>
-                      </div>
-                      {DISTRICT_RANKINGS.slice(-5).reverse().map((d) => (
-                        <div key={d.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
-                          <div>
-                            <strong>#{d.rank} {d.name}</strong> <small style={{ color: 'var(--muted-foreground)' }}>({d.division})</small>
-                            <p style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Speed: {d.speedMbps} Mbps · Latency: {d.latencyMs}ms</p>
-                          </div>
-                          <Tag tone="amber">{d.connectivityIndex} Index</Tag>
-                        </div>
-                      ))}
-                    </section>
-                  </div>
-
-                  {/* District-Wise Connectivity Table */}
-                  <section className="panel data-panel">
-                    <div className="section-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '15px' }}>
                       <div>
-                        <h2>64-District Telecom Connectivity Matrix</h2>
-                        <p className="metadata">District ranking, index score, speed, call drop rate, and 4G coverage.</p>
+                        <h2>Recent 24-Hour Real-Time Generation vs Power Demand Profile</h2>
+                        <p className="metadata">Actual hourly values from Power Grid Bangladesh PLC (PGCB) telemetry</p>
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--subtle)', border: '1px solid var(--border)', padding: '4px 10px', borderRadius: '6px' }}>
-                        <Search size={14} />
-                        <input
-                          placeholder="Filter district..."
-                          value={districtSearch}
-                          onChange={(e) => setDistrictSearch(e.target.value)}
-                          style={{ background: 'none', border: 'none', outline: 'none', fontSize: '12px', color: 'var(--foreground)' }}
-                        />
-                      </div>
+                      <Tag tone="green">LIVE TELEMETRY</Tag>
                     </div>
-                    <div className="table-responsive">
+
+                    <div className="chart-legend" style={{ margin: '18px 0 10px' }}>
+                      <span>
+                        <i className="dot" style={{ background: '#f0b452' }} /> Substation Demand (MW)
+                      </span>
+                      <span>
+                        <i className="dot" style={{ background: '#48a989' }} /> Grid Supply (MW)
+                      </span>
+                      <span>
+                        <i className="dot" style={{ background: '#ec7b6b' }} /> Load Shedding (MW)
+                      </span>
+                      <span>
+                        <i className="dot" style={{ background: '#64c7af' }} /> Total Generation (MW)
+                      </span>
+                    </div>
+
+                    {/* SVG Curve for recent 24 hours */}
+                    <div style={{ height: '220px', width: '100%', position: 'relative', marginTop: '15px' }}>
+                      <svg viewBox="0 0 800 200" preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
+                        {[40, 80, 120, 160].map((y) => (
+                          <line key={y} x1="0" x2="800" y1={y} y2={y} stroke="var(--border)" strokeDasharray="3 5" />
+                        ))}
+                        {/* Demand line */}
+                        <polyline
+                          points={POWERGRID_RECENT_HOURLY.slice(0, 24)
+                            .map((r, idx) => {
+                              const x = (idx / 23) * 800;
+                              const y = 190 - ((r.demand_mw - 10000) / 8000) * 160;
+                              return `${x},${Math.max(10, Math.min(190, y))}`;
+                            })
+                            .reverse()
+                            .join(' ')}
+                          fill="none"
+                          stroke="#f0b452"
+                          strokeWidth="2.5"
+                          strokeDasharray="5 3"
+                        />
+                        {/* Supply line */}
+                        <polyline
+                          points={POWERGRID_RECENT_HOURLY.slice(0, 24)
+                            .map((r, idx) => {
+                              const x = (idx / 23) * 800;
+                              const y = 190 - ((r.supply_mw - 10000) / 8000) * 160;
+                              return `${x},${Math.max(10, Math.min(190, y))}`;
+                            })
+                            .reverse()
+                            .join(' ')}
+                          fill="none"
+                          stroke="#48a989"
+                          strokeWidth="3"
+                        />
+                        {/* Loadshedding line */}
+                        <polyline
+                          points={POWERGRID_RECENT_HOURLY.slice(0, 24)
+                            .map((r, idx) => {
+                              const x = (idx / 23) * 800;
+                              const y = 190 - (r.loadshed_mw / 4000) * 160;
+                              return `${x},${Math.max(10, Math.min(190, y))}`;
+                            })
+                            .reverse()
+                            .join(' ')}
+                          fill="none"
+                          stroke="#ec7b6b"
+                          strokeWidth="2"
+                        />
+                      </svg>
+                    </div>
+
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--muted-foreground)', marginTop: '8px' }}>
+                      {POWERGRID_RECENT_HOURLY.slice(0, 24)
+                        .filter((_, i) => i % 4 === 0)
+                        .reverse()
+                        .map((r) => (
+                          <span key={r.date + r.time}>{r.time.slice(0, 5)}</span>
+                        ))}
+                    </div>
+                  </section>
+
+                  {/* Hourly Telemetry Detail Table */}
+                  <section className="panel data-panel">
+                    <div className="section-top">
+                      <h2>Last 24 Hours Hourly Grid Telemetry</h2>
+                      <Tag tone="green">24 RECORDS</Tag>
+                    </div>
+                    <div className="table-responsive" style={{ maxHeight: '420px', overflowY: 'auto' }}>
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            {['Rank', 'District', 'Division', 'Index Score', 'Avg Speed (Mbps)', 'Latency (ms)', 'Call Drop Rate', '4G Coverage', 'BTS Count', 'Status'].map((h) => (
+                            {['Time', 'Date', 'Demand (MW)', 'Supply (MW)', 'Loadshed (MW)', 'Deficit %', 'Generation (MW)', 'Gas (MW)', 'Coal (MW)', 'Imports (MW)', 'Remarks'].map((h) => (
                               <TableHead key={h}>{h}</TableHead>
                             ))}
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {DISTRICT_RANKINGS.filter((d) => (d.name + ' ' + d.division).toLowerCase().includes(districtSearch.toLowerCase())).map((d) => (
-                            <TableRow key={d.name}>
-                              <TableCell style={{ fontWeight: 700 }}>#{d.rank}</TableCell>
-                              <TableCell style={{ fontWeight: 600 }}>{d.name}</TableCell>
-                              <TableCell>{d.division}</TableCell>
-                              <TableCell style={{ fontWeight: 600, color: 'var(--primary)' }}>{d.connectivityIndex}</TableCell>
-                              <TableCell>{d.speedMbps} Mbps</TableCell>
-                              <TableCell style={{ fontFamily: 'monospace' }}>{d.latencyMs} ms</TableCell>
-                              <TableCell>{d.callDropRate}%</TableCell>
-                              <TableCell>{d.coverage4G}%</TableCell>
-                              <TableCell>{d.btsSites.toLocaleString()}</TableCell>
-                              <TableCell>
-                                <Tag tone={d.status === 'Top Tier' ? 'green' : d.status === 'Moderate' ? 'amber' : 'red'}>{d.status}</Tag>
-                              </TableCell>
-                            </TableRow>
-                          ))}
+                          {POWERGRID_RECENT_HOURLY.slice(0, 24).map((r, idx) => {
+                            const deficitPct = r.demand_mw > 0 ? ((r.loadshed_mw / r.demand_mw) * 100).toFixed(1) : '0.0';
+                            return (
+                              <TableRow key={idx}>
+                                <TableCell style={{ fontWeight: 650 }}>{r.time}</TableCell>
+                                <TableCell>{r.date}</TableCell>
+                                <TableCell style={{ color: '#f0b452', fontWeight: 600 }}>{r.demand_mw.toLocaleString()}</TableCell>
+                                <TableCell style={{ color: '#48a989', fontWeight: 600 }}>{r.supply_mw.toLocaleString()}</TableCell>
+                                <TableCell style={{ color: r.loadshed_mw > 2000 ? '#ec7b6b' : 'inherit', fontWeight: 600 }}>
+                                  {r.loadshed_mw.toLocaleString()}
+                                </TableCell>
+                                <TableCell>{deficitPct}%</TableCell>
+                                <TableCell>{(r.total_gen_mw ?? 0).toLocaleString()}</TableCell>
+                                <TableCell>{(r.gas_mw ?? 0).toLocaleString()}</TableCell>
+                                <TableCell>{(r.coal_mw ?? 0).toLocaleString()}</TableCell>
+                                <TableCell>{(r.cross_border?.total_imports_mw ?? 0).toLocaleString()}</TableCell>
+                                <TableCell>
+                                  {r.remark ? (
+                                    <Tag tone={r.remark.includes('Peak') ? 'amber' : 'neutral'}>{r.remark}</Tag>
+                                  ) : (
+                                    <span style={{ color: 'var(--muted-foreground)' }}>—</span>
+                                  )}
+                                </TableCell>
+                              </TableRow>
+                            );
+                          })}
                         </TableBody>
                       </Table>
                     </div>
                   </section>
-                </>
+                </div>
               )}
+
+              {/* Sub-Tab 4: PowerGrid Historical Log */}
+              {electricitySubTab === 'PowerGrid Historical Log' && (
+                <section className="panel data-panel">
+                  <div className="section-top">
+                    <div>
+                      <h2>Power Grid Bangladesh PLC — Historical Scraped Telemetry</h2>
+                      <p className="metadata">
+                        Search and inspect all {POWERGRID_METADATA.total_unified_records.toLocaleString()} hourly demand, supply, loadshedding and generation logs.
+                      </p>
+                    </div>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <button className="quiet-button" onClick={downloadPowerGridCSV} style={{ border: '1px solid var(--border)', borderRadius: '6px', fontSize: '11px' }}>
+                        <Download size={13} /> Export CSV
+                      </button>
+                      <button className="primary-button" onClick={downloadPowerGridJSON} style={{ fontSize: '11px', padding: '6px 12px' }}>
+                        <Database size={13} /> Full JSON
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Filter Toolbar */}
+                  <div style={{ display: 'flex', gap: '12px', alignItems: 'center', margin: '16px 0', flexWrap: 'wrap' }}>
+                    <div className="search-input" style={{ flex: 1, minWidth: '240px', padding: '8px 12px' }}>
+                      <Search size={16} />
+                      <input
+                        placeholder="Search date (e.g. 08-09-2026, 07-09-2026) or time..."
+                        value={pgSearch}
+                        onChange={(e) => {
+                          setPgSearch(e.target.value);
+                          setPgPage(1);
+                        }}
+                      />
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      {(['All', 'Peaks', 'Loadshed'] as const).map((mode) => (
+                        <button
+                          key={mode}
+                          onClick={() => {
+                            setPgFilterRemark(mode);
+                            setPgPage(1);
+                          }}
+                          className="quiet-button"
+                          style={{
+                            background: pgFilterRemark === mode ? 'var(--primary)' : 'var(--subtle)',
+                            color: pgFilterRemark === mode ? '#fff' : 'var(--muted-foreground)',
+                            border: '1px solid var(--border)',
+                            borderRadius: '6px',
+                            fontSize: '11px',
+                            padding: '6px 12px',
+                          }}
+                        >
+                          {mode === 'All' ? 'All Logs' : mode === 'Peaks' ? 'Peak Hours Only' : 'High Loadshed (>2000 MW)'}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Historical Table */}
+                  {(() => {
+                    const filtered = POWERGRID_RECENT_HOURLY.filter((r) => {
+                      const matchSearch =
+                        !pgSearch ||
+                        r.date.includes(pgSearch) ||
+                        r.time.includes(pgSearch) ||
+                        (r.remark && r.remark.toLowerCase().includes(pgSearch.toLowerCase()));
+                      const matchRemark =
+                        pgFilterRemark === 'All'
+                          ? true
+                          : pgFilterRemark === 'Peaks'
+                          ? r.remark && r.remark.toLowerCase().includes('peak')
+                          : r.loadshed_mw >= 2000;
+                      return matchSearch && matchRemark;
+                    });
+
+                    const perPage = 15;
+                    const totalPages = Math.ceil(filtered.length / perPage) || 1;
+                    const pageRecords = filtered.slice((pgPage - 1) * perPage, pgPage * perPage);
+
+                    return (
+                      <>
+                        <div className="table-responsive">
+                          <Table>
+                            <TableHeader>
+                              <TableRow>
+                                {['Date', 'Time', 'Demand (MW)', 'Supply (MW)', 'Loadshed (MW)', 'Total Gen (MW)', 'Gas (MW)', 'Coal (MW)', 'Liquid Fuel (MW)', 'Imports (MW)', 'Hydro (MW)', 'Solar (MW)', 'Remarks'].map((h) => (
+                                  <TableHead key={h}>{h}</TableHead>
+                                ))}
+                              </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                              {pageRecords.map((r, idx) => (
+                                <TableRow key={r.date + r.time + idx}>
+                                  <TableCell style={{ fontWeight: 600 }}>{r.date}</TableCell>
+                                  <TableCell>{r.time}</TableCell>
+                                  <TableCell style={{ color: '#f0b452', fontWeight: 600 }}>{r.demand_mw.toLocaleString()}</TableCell>
+                                  <TableCell style={{ color: '#48a989', fontWeight: 600 }}>{r.supply_mw.toLocaleString()}</TableCell>
+                                  <TableCell style={{ color: r.loadshed_mw > 2000 ? '#ec7b6b' : 'inherit', fontWeight: 600 }}>
+                                    {r.loadshed_mw.toLocaleString()}
+                                  </TableCell>
+                                  <TableCell style={{ fontWeight: 600 }}>{(r.total_gen_mw ?? 0).toLocaleString()}</TableCell>
+                                  <TableCell>{(r.gas_mw ?? 0).toLocaleString()}</TableCell>
+                                  <TableCell>{(r.coal_mw ?? 0).toLocaleString()}</TableCell>
+                                  <TableCell>{(r.liquid_fuel_mw ?? 0).toLocaleString()}</TableCell>
+                                  <TableCell style={{ color: '#70b8f4' }}>{(r.cross_border?.total_imports_mw ?? 0).toLocaleString()}</TableCell>
+                                  <TableCell>{(r.hydro_mw ?? 0).toLocaleString()}</TableCell>
+                                  <TableCell>{(r.solar_mw ?? 0).toLocaleString()}</TableCell>
+                                  <TableCell>
+                                    {r.remark ? (
+                                      <Tag tone={r.remark.includes('Peak') ? 'amber' : 'neutral'}>{r.remark}</Tag>
+                                    ) : (
+                                      <span style={{ color: 'var(--muted-foreground)' }}>—</span>
+                                    )}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+                              {!pageRecords.length && (
+                                <TableRow>
+                                  <TableCell colSpan={13} style={{ textAlign: 'center', padding: '30px', color: 'var(--muted-foreground)' }}>
+                                    No records match the active search and filter.
+                                  </TableCell>
+                                </TableRow>
+                              )}
+                            </TableBody>
+                          </Table>
+                        </div>
+
+                        {/* Pagination Bar */}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '16px', fontSize: '12px', color: 'var(--muted-foreground)' }}>
+                          <span>
+                            Showing {(pgPage - 1) * perPage + 1}–{Math.min(pgPage * perPage, filtered.length)} of {filtered.length} matching records
+                          </span>
+                          <div style={{ display: 'flex', gap: '8px' }}>
+                            <button
+                              disabled={pgPage <= 1}
+                              onClick={() => setPgPage((p) => Math.max(1, p - 1))}
+                              className="quiet-button"
+                              style={{ border: '1px solid var(--border)', borderRadius: '6px', padding: '4px 10px' }}
+                            >
+                              Previous
+                            </button>
+                            <span style={{ padding: '4px 8px', fontWeight: 600, color: 'var(--foreground)' }}>
+                              Page {pgPage} of {totalPages}
+                            </span>
+                            <button
+                              disabled={pgPage >= totalPages}
+                              onClick={() => setPgPage((p) => Math.min(totalPages, p + 1))}
+                              className="quiet-button"
+                              style={{ border: '1px solid var(--border)', borderRadius: '6px', padding: '4px 10px' }}
+                            >
+                              Next
+                            </button>
+                          </div>
+                        </div>
+                      </>
+                    );
+                  })()}
+                </section>
+              )}
+            </div>
+          )}
+
+          {/* DEDICATED TELECOM COMMAND PAGE WITH BTRC SUB-MENUS & ALL 10 DATASETS */}
+          {page === 'Telecom' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              {/* Map Section Visualizing Telecom Infrastructure */}
+              <div className="map-layout expanded">{map}</div>
+
+              {/* BTRC Full Categories & Datasets */}
+              <BtrcTelecomViews
+                activeTab={telcoSubTabId}
+                onSelectTab={(id) => setTelcoSubTabId(id)}
+                setNotice={setNotice}
+              />
             </div>
           )}
 
@@ -1381,8 +1901,8 @@ export default function Home() {
             </div>
           )}
 
-          {/* Electricity & Load Shedding View */}
-          {['Overview', 'Electricity', 'Analytics'].includes(page) && (
+          {/* Overview & Analytics Telemetry View */}
+          {['Overview', 'Analytics'].includes(page) && (
             <div className="bottom-grid">
               <section className="panel trend-panel">
                 <div className="section-top">

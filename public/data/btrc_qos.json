@@ -1,0 +1,1265 @@
+{
+  "Grameenphone": {
+    "source_pdf": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-btrc/2026/8/e4de4059-6ade-481c-8b9f-bd891080e42d.pdf",
+    "period": "July 2026",
+    "kpis": [
+      {
+        "raw_line": "2G Call Drop Rate(%) <= 1.00 0.3298 0.3300",
+        "kpi": "2G Call Drop Rate(%)",
+        "threshold": "<= 1.00",
+        "btrc_monitored": 1.0,
+        "operator_declared": 0.3298
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%) >= 99.00 99.6323 99.6324",
+        "kpi": "2G Call Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.6323
+      },
+      {
+        "raw_line": "4G Avg. UE throughput DL (Mbps) >= 3.50 8.2264 8.2231",
+        "kpi": "4G Avg. UE throughput DL (Mbps)",
+        "threshold": ">= 3.50",
+        "btrc_monitored": 3.5,
+        "operator_declared": 8.2264
+      },
+      {
+        "raw_line": "4G Counter Mobile Data NRR - LTE ERAB Non-Retainability(%) <= 0.50 0.1423 0.1425",
+        "kpi": "4G Counter Mobile Data NRR - LTE ERAB Non-Retainability(%)",
+        "threshold": "<= 0.50",
+        "btrc_monitored": 0.5,
+        "operator_declared": 0.1423
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%) >= 99.00 99.8345 99.8339",
+        "kpi": "4G RRC Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.8345
+      },
+      {
+        "raw_line": "4G VoLTE Call Setup Success Rate (%) >= 99.00 99.7320 99.9230",
+        "kpi": "4G VoLTE Call Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.732
+      },
+      {
+        "raw_line": "4G VoLTE drop/Abnormal Release Rate (%) <= 0.50 0.3814 0.0422",
+        "kpi": "4G VoLTE drop/Abnormal Release Rate (%)",
+        "threshold": "<= 0.50",
+        "btrc_monitored": 0.5,
+        "operator_declared": 0.3814
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%) <= 1.00 0.3478 0.2508",
+        "kpi": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "threshold": "<= 1.00",
+        "btrc_monitored": 1.0,
+        "operator_declared": 0.3478
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%) >= 99.00 99.6669 99.7125",
+        "kpi": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.6669
+      },
+      {
+        "raw_line": "CSFB Success Rate (%) >= 98.00 98.6453 98.6908",
+        "kpi": "CSFB Success Rate (%)",
+        "threshold": ">= 98.00",
+        "btrc_monitored": 98.0,
+        "operator_declared": 98.6453
+      },
+      {
+        "raw_line": "SMS Completion Rate (%) >= 98.00 99.6211 99.6900",
+        "kpi": "SMS Completion Rate (%)",
+        "threshold": ">= 98.00",
+        "btrc_monitored": 98.0,
+        "operator_declared": 99.6211
+      },
+      {
+        "raw_line": "2G Call Drop Rate (%) Percentage of 2G calls disconnected unexpectedly.",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%) Percentage of 2G call attempts successfully connected.",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%) Percentage of successful 4G network connection attempts.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G VoLTE Call Setup Success Rate (%) Percentage of VoLTE call attempts successfully connected.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G VoLTE Drop/Abnormal Release Rate (%) Percentage of VoLTE calls disconnected unexpectedly.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%) Percentage of VoLTE and GSM calls disconnected unexpectedly.",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%) Percentage of VoLTE and GSM call attempts successfully connected.",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "CSFB Success Rate (%) Percentage of successful transfers from 4G to 2G for voice calls.",
+        "kpi": "CSFB",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "SMS Completion Rate (%) Percentage of SMS attempts successfully completed .",
+        "kpi": "SMS",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate(%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate(%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G Avg. UE throughput DL(Mbps)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate(%)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate (%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      }
+    ]
+  },
+  "Robi Axiata": {
+    "source_pdf": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-btrc/2026/8/3a326541-fa05-43da-a683-5a4a72330c6d.pdf",
+    "period": "July 2026",
+    "kpis": [
+      {
+        "raw_line": "2G Call Drop Rate(%) <= 1.00 0.2405 0.2174",
+        "kpi": "2G Call Drop Rate(%)",
+        "threshold": "<= 1.00",
+        "btrc_monitored": 1.0,
+        "operator_declared": 0.2405
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%) >= 99.00 99.2877 99.3600",
+        "kpi": "2G Call Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.2877
+      },
+      {
+        "raw_line": "4G Avg. UE throughput DL (Mbps) >= 3.50 6.8477 7.0544",
+        "kpi": "4G Avg. UE throughput DL (Mbps)",
+        "threshold": ">= 3.50",
+        "btrc_monitored": 3.5,
+        "operator_declared": 6.8477
+      },
+      {
+        "raw_line": "4G Counter Mobile Data NRR - LTE ERAB Non-Retainability(%) <= 0.50 0.2462 0.1871",
+        "kpi": "4G Counter Mobile Data NRR - LTE ERAB Non-Retainability(%)",
+        "threshold": "<= 0.50",
+        "btrc_monitored": 0.5,
+        "operator_declared": 0.2462
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%) >= 99.00 99.8695 99.7988",
+        "kpi": "4G RRC Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.8695
+      },
+      {
+        "raw_line": "4G VoLTE Call Setup Success Rate (%) >= 99.00 99.6549 99.9289",
+        "kpi": "4G VoLTE Call Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.6549
+      },
+      {
+        "raw_line": "4G VoLTE drop/Abnormal Release Rate (%) <= 0.50 0.1348 0.1212",
+        "kpi": "4G VoLTE drop/Abnormal Release Rate (%)",
+        "threshold": "<= 0.50",
+        "btrc_monitored": 0.5,
+        "operator_declared": 0.1348
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%) <= 1.00 0.2115 0.1664",
+        "kpi": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "threshold": "<= 1.00",
+        "btrc_monitored": 1.0,
+        "operator_declared": 0.2115
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%) >= 99.00 99.5964 99.6596",
+        "kpi": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.5964
+      },
+      {
+        "raw_line": "CSFB Success Rate (%) >= 98.00 98.8942 98.9400",
+        "kpi": "CSFB Success Rate (%)",
+        "threshold": ">= 98.00",
+        "btrc_monitored": 98.0,
+        "operator_declared": 98.8942
+      },
+      {
+        "raw_line": "SMS Completion Rate (%) >= 98.00 98.7495 98.7496",
+        "kpi": "SMS Completion Rate (%)",
+        "threshold": ">= 98.00",
+        "btrc_monitored": 98.0,
+        "operator_declared": 98.7495
+      },
+      {
+        "raw_line": "2G Call Drop Rate (%) Percentage of 2G calls disconnected unexpectedly.",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%) Percentage of 2G call attempts successfully connected.",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%) Percentage of successful 4G network connection attempts.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G VoLTE Call Setup Success Rate (%) Percentage of VoLTE call attempts successfully connected.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G VoLTE Drop/Abnormal Release Rate (%) Percentage of VoLTE calls disconnected unexpectedly.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%) Percentage of VoLTE and GSM calls disconnected unexpectedly.",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%) Percentage of VoLTE and GSM call attempts successfully connected.",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "CSFB Success Rate (%) Percentage of successful transfers from 4G to 2G for voice calls.",
+        "kpi": "CSFB",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "SMS Completion Rate (%) Percentage of SMS attempts successfully completed.",
+        "kpi": "SMS",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate(%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate(%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G Avg. UE throughput DL(Mbps)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate(%)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate (%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "District Upazilla 2G Call Drop Rate 2G Call Setup Success Rate",
+        "kpi": "District",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release MIXED VoLTE+GSM Combined Voice Setup Success 4G Avg. UE throughput DLDistrict Upazilla 2G Call Drop Rate 2G Call Setup Success Rate",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release MIXED VoLTE+GSM Combined Voice Setup Success 4G Avg. UE throughput DLDistrict Upazilla 2G Call Drop Rate 2G Call Setup Success Rate",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release MIXED VoLTE+GSM Combined Voice Setup Success 4G Avg. UE throughput DLDistrict Upazilla 2G Call Drop Rate 2G Call Setup Success Rate",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release MIXED VoLTE+GSM Combined Voice Setup Success 4G Avg. UE throughput DLDistrict Upazilla 2G Call Drop Rate 2G Call Setup Success Rate",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release MIXED VoLTE+GSM Combined Voice Setup Success 4G Avg. UE throughput DLDistrict Upazilla 2G Call Drop Rate 2G Call Setup Success Rate",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate MIXED VoLTE+GSM Combined Abnormal Release MIXED VoLTE+GSM Combined Voice Setup Success 4G Avg. UE throughput DLDistrict Upazilla 2G Call Drop Rate 2G Call Setup Success Rate",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      }
+    ]
+  },
+  "Banglalink": {
+    "source_pdf": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-btrc/2026/8/a3974ffa-1cec-40bd-86bd-30963a85399c.pdf",
+    "period": "July 2026",
+    "kpis": [
+      {
+        "raw_line": "2G Call Drop Rate(%) <= 1.00 0.3566 0.3566",
+        "kpi": "2G Call Drop Rate(%)",
+        "threshold": "<= 1.00",
+        "btrc_monitored": 1.0,
+        "operator_declared": 0.3566
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%) >= 99.00 99.7270 99.7271",
+        "kpi": "2G Call Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.727
+      },
+      {
+        "raw_line": "4G Avg. UE throughput DL (Mbps) >= 3.50 8.6070 8.5934",
+        "kpi": "4G Avg. UE throughput DL (Mbps)",
+        "threshold": ">= 3.50",
+        "btrc_monitored": 3.5,
+        "operator_declared": 8.607
+      },
+      {
+        "raw_line": "4G Counter Mobile Data NRR - LTE ERAB Non-Retainability(%) <= 0.50 0.0911 0.0911",
+        "kpi": "4G Counter Mobile Data NRR - LTE ERAB Non-Retainability(%)",
+        "threshold": "<= 0.50",
+        "btrc_monitored": 0.5,
+        "operator_declared": 0.0911
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%) >= 99.00 99.8422 99.8421",
+        "kpi": "4G RRC Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.8422
+      },
+      {
+        "raw_line": "4G VoLTE Call Setup Success Rate (%) >= 99.00 99.9208 99.9193",
+        "kpi": "4G VoLTE Call Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.9208
+      },
+      {
+        "raw_line": "4G VoLTE drop/Abnormal Release Rate (%) <= 0.50 0.0732 0.0733",
+        "kpi": "4G VoLTE drop/Abnormal Release Rate (%)",
+        "threshold": "<= 0.50",
+        "btrc_monitored": 0.5,
+        "operator_declared": 0.0732
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%) <= 1.00 0.2915 0.2931",
+        "kpi": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "threshold": "<= 1.00",
+        "btrc_monitored": 1.0,
+        "operator_declared": 0.2915
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%) >= 99.00 99.7625 99.7613",
+        "kpi": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.7625
+      },
+      {
+        "raw_line": "CSFB Success Rate (%) >= 98.00 99.1856 99.1856",
+        "kpi": "CSFB Success Rate (%)",
+        "threshold": ">= 98.00",
+        "btrc_monitored": 98.0,
+        "operator_declared": 99.1856
+      },
+      {
+        "raw_line": "SMS Completion Rate (%) >= 98.00 99.8086 99.8637",
+        "kpi": "SMS Completion Rate (%)",
+        "threshold": ">= 98.00",
+        "btrc_monitored": 98.0,
+        "operator_declared": 99.8086
+      },
+      {
+        "raw_line": "2G Call Drop Rate (%) Percentage of 2G calls disconnected unexpectedly.",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%) Percentage of 2G call attempts successfully connected.",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%) Percentage of successful 4G network connection attempts.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G VoLTE Call Setup Success Rate (%) Percentage of VoLTE call attempts successfully connected.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G VoLTE Drop/Abnormal Release Rate (%) Percentage of VoLTE calls disconnected unexpectedly.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%) Percentage of VoLTE and GSM calls disconnected unexpectedly.",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%) Percentage of VoLTE and GSM call attempts successfully connected.",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "CSFB Success Rate (%) Percentage of successful transfers from 4G to 2G for voice calls.",
+        "kpi": "CSFB",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "SMS Completion Rate (%) Percentage of SMS attempts successfully completed .",
+        "kpi": "SMS",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate(%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate(%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G Avg. UE throughput DL(Mbps)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate(%)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate (%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      }
+    ]
+  },
+  "Teletalk": {
+    "source_pdf": "https://objectstorage.ap-dcc-gazipur-1.oraclecloud15.com/n/axvjbnqprylg/b/V2Ministry/o/office-btrc/2026/8/91a1f72c-ea13-4a0b-8564-ce27e05d00cf.pdf",
+    "period": "July 2026",
+    "kpis": [
+      {
+        "raw_line": "2G Call Drop Rate(%) <= 1.00 Incomplete raw/binary file from Taletalk 0.4796",
+        "kpi": "2G Call Drop Rate(%)",
+        "threshold": "<= 1.00",
+        "btrc_monitored": 1.0,
+        "operator_declared": 0.4796
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%) >= 99.00 Incomplete raw/binary file from Taletalk 99.2981",
+        "kpi": "2G Call Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 99.2981
+      },
+      {
+        "raw_line": "4G Avg. UE throughput DL (Mbps) >= 3.50 Incomplete raw/binary file from Taletalk 11.2000",
+        "kpi": "4G Avg. UE throughput DL (Mbps)",
+        "threshold": ">= 3.50",
+        "btrc_monitored": 3.5,
+        "operator_declared": 11.2
+      },
+      {
+        "raw_line": "4G Counter Mobile Data NRR - LTE ERAB Non-Retainability(%) <= 0.50 Incomplete raw/binary file from Taletalk 0.6431",
+        "kpi": "4G Counter Mobile Data NRR - LTE ERAB Non-Retainability(%)",
+        "threshold": "<= 0.50",
+        "btrc_monitored": 0.5,
+        "operator_declared": 0.6431
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%) >= 99.00 Incomplete raw/binary file from Taletalk 98.4904",
+        "kpi": "4G RRC Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": 98.4904
+      },
+      {
+        "raw_line": "4G VoLTE Call Setup Success Rate (%) >= 99.00 Incomplete raw/binary file from Taletalk -",
+        "kpi": "4G VoLTE Call Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G VoLTE drop/Abnormal Release Rate (%) <= 0.50 Incomplete raw/binary file from Taletalk -",
+        "kpi": "4G VoLTE drop/Abnormal Release Rate (%)",
+        "threshold": "<= 0.50",
+        "btrc_monitored": 0.5,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%) <= 1.00 Incomplete raw/binary file from Taletalk -",
+        "kpi": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "threshold": "<= 1.00",
+        "btrc_monitored": 1.0,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%) >= 99.00 Incomplete raw/binary file from Taletalk -",
+        "kpi": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "threshold": ">= 99.00",
+        "btrc_monitored": 99.0,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "CSFB Success Rate (%) >= 98.00 Incomplete raw/binary file from Taletalk 99.6377",
+        "kpi": "CSFB Success Rate (%)",
+        "threshold": ">= 98.00",
+        "btrc_monitored": 98.0,
+        "operator_declared": 99.6377
+      },
+      {
+        "raw_line": "SMS Completion Rate (%) >= 98.00 Incomplete raw/binary file from Taletalk -",
+        "kpi": "SMS Completion Rate (%)",
+        "threshold": ">= 98.00",
+        "btrc_monitored": 98.0,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate (%) Percentage of 2G calls disconnected unexpectedly.",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%) Percentage of 2G call attempts successfully connected.",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%) Percentage of successful 4G network connection attempts.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G VoLTE Call Setup Success Rate (%) Percentage of VoLTE call attempts successfully connected.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G VoLTE Drop/Abnormal Release Rate (%) Percentage of VoLTE calls disconnected unexpectedly.",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%) Percentage of VoLTE and GSM calls disconnected unexpectedly.",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%) Percentage of VoLTE and GSM call attempts successfully connected.",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "CSFB Success Rate (%) Percentage of successful transfers from 4G to 2G for voice calls.",
+        "kpi": "CSFB",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "SMS Completion Rate (%) Percentage of SMS attempts successfully completed.",
+        "kpi": "SMS",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate(%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate(%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G Avg. UE throughput DL(Mbps)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate(%)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Voice Setup Success Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate (%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Setup Success Rate (%)",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "4G RRC Success Rate (%)",
+        "kpi": "4G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate (%)",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "MIXED VoLTE+GSM Combined Abnormal Release Rate MIXED VoLTE+GSM Combined Voice Setup Success Rate 4G Avg. UE throughput DL",
+        "kpi": "MIXED",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      },
+      {
+        "raw_line": "2G Call Drop Rate 2G Call Setup Success Rate 4G RRC Success Rate",
+        "kpi": "2G",
+        "threshold": ">= N/A",
+        "btrc_monitored": null,
+        "operator_declared": null
+      }
+    ]
+  }
+}

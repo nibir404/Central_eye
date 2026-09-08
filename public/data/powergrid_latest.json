@@ -1,0 +1,32 @@
+{
+  "scraped_at": "2026-09-08 23:22:53 BST",
+  "total_demand_supply_records": 3471,
+  "total_generation_records": 3570,
+  "total_unified_records": 3570,
+  "latest_entry": {
+    "date": "08-09-2026",
+    "time": "20:00:00",
+    "demand_mw": 16987,
+    "supply_mw": 14816,
+    "loadshed_mw": 2171,
+    "remark": "",
+    "total_gen_mw": 15344,
+    "gas_mw": 4857,
+    "liquid_fuel_mw": 2968,
+    "coal_mw": 4888,
+    "hydro_mw": 222,
+    "solar_mw": 0,
+    "wind_mw": 0,
+    "cross_border": {
+      "india_bheramara_mw": 823,
+      "india_tripura_mw": 172,
+      "india_adani_mw": 1414,
+      "nepal_mw": 0,
+      "total_imports_mw": 2409
+    }
+  },
+  "date_range": {
+    "latest": "08-09-2026",
+    "earliest": "19-04-2026"
+  }
+}

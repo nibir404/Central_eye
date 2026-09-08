@@ -1,0 +1,69 @@
+{
+  "total_illegal_sims_blocked": 14250000,
+  "total_illegal_voip_raids": 348,
+  "equipment_seized": {
+    "sim_boxes": 1420,
+    "voip_gateways": 850,
+    "servers": 312,
+    "sim_cards": 284500
+  },
+  "revenue_loss_prevented_bdt_crore": 4850.5,
+  "current_year_enforcements": [
+    {
+      "division": "Dhaka",
+      "raids": 142,
+      "sims_deactivated": 4850000,
+      "gateway_seized": 450,
+      "status": "Active Surveillance"
+    },
+    {
+      "division": "Chattogram",
+      "raids": 85,
+      "sims_deactivated": 3210000,
+      "gateway_seized": 210,
+      "status": "Active Surveillance"
+    },
+    {
+      "division": "Sylhet",
+      "raids": 48,
+      "sims_deactivated": 2100000,
+      "gateway_seized": 115,
+      "status": "Active Surveillance"
+    },
+    {
+      "division": "Rajshahi",
+      "raids": 26,
+      "sims_deactivated": 1450000,
+      "gateway_seized": 55,
+      "status": "Normal"
+    },
+    {
+      "division": "Khulna",
+      "raids": 22,
+      "sims_deactivated": 1180000,
+      "gateway_seized": 48,
+      "status": "Normal"
+    },
+    {
+      "division": "Barishal",
+      "raids": 12,
+      "sims_deactivated": 680000,
+      "gateway_seized": 22,
+      "status": "Normal"
+    },
+    {
+      "division": "Rangpur",
+      "raids": 8,
+      "sims_deactivated": 420000,
+      "gateway_seized": 14,
+      "status": "Normal"
+    },
+    {
+      "division": "Mymensingh",
+      "raids": 5,
+      "sims_deactivated": 360000,
+      "gateway_seized": 11,
+      "status": "Normal"
+    }
+  ]
+}

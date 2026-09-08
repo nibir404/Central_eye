@@ -1,0 +1,32 @@
+{
+  "source": "Bangladesh Telecommunication Regulatory Commission (BTRC)",
+  "portal": "https://btrc.gov.bd",
+  "last_updated": "July 2026",
+  "metrics": {
+    "teledensity_pct": 107.97,
+    "internet_penetration_pct": 77.42,
+    "total_mobile_subs_m": 190.44,
+    "total_internet_subs_m": 136.75,
+    "total_towers": 46610.0,
+    "total_optical_fiber_km": 179775,
+    "spectrum_allocated_mhz": 406.6
+  },
+  "operator_shares": {
+    "grameenphone": {
+      "subs_m": 87.01,
+      "share_pct": 45.69
+    },
+    "robi": {
+      "subs_m": 58.77,
+      "share_pct": 30.86
+    },
+    "banglalink": {
+      "subs_m": 37.84,
+      "share_pct": 19.87
+    },
+    "teletalk": {
+      "subs_m": 6.82,
+      "share_pct": 3.58
+    }
+  }
+}
