@@ -2,7 +2,7 @@
 
 Interactive Bangladesh infrastructure prototype. Run `npm install` and `npm run dev`. Build with `npm run build`.
 
-- CSS perspective map with extruded geographic layers, rotation, zoom, 2D view, filtering and asset inspection.
+- WebGL / Three.js scene with extruded geographic layers, 3D lattice pylons, antenna towers, suspended power lines, signal rings, animated connection particles, orbit controls, zoom, asset focus, and a 2D fallback. Models are symbolic sector representations, not surveyed replicas of the actual assets.
 - Historical BPDB (November 2025) and BTRC (January 2026) public reference snapshots. All operational states, incidents, project progress, generation charts, hub examples and relationships are seed scenarios.
 - Geographic boundary shapes simplified from https://github.com/ifahimreza/bangladesh-geojson (geoBoundaries / BBS / OCHA, CC BY 4.0). Simplification is for visualization; not a survey or operational network map.
 - Coordinates are approximate. Connection lines do not represent surveyed grid/fiber routes.
