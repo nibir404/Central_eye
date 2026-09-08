@@ -6,6 +6,8 @@ import {
   INITIAL_DIVISIONS,
   INITIAL_OPERATORS,
   INITIAL_CABLES,
+  SPECTRUM_BANDS,
+  DISTRICT_RANKINGS,
   generateNextTick,
   DivisionTelemetry,
   OperatorTelemetry,
@@ -18,6 +20,8 @@ import {
   ArrowDownToLine,
   ArrowRight,
   ArrowUpRight,
+  Award,
+  BarChart3,
   Bell,
   Building2,
   Check,
@@ -25,6 +29,7 @@ import {
   Compass,
   Cpu,
   Database,
+  Download,
   FileText,
   Globe2,
   Layers,
@@ -34,6 +39,8 @@ import {
   Minus,
   Moon,
   Pause,
+  PhoneCall,
+  PieChart,
   Play,
   Plus,
   Radio,
@@ -42,10 +49,14 @@ import {
   Search,
   Server,
   Settings2,
+  ShieldAlert,
   ShieldCheck,
+  Signal,
   Sliders,
   Sun,
+  TrendingUp,
   TriangleAlert,
+  Users,
   Wifi,
   Zap,
 } from 'lucide-react';
@@ -162,6 +173,8 @@ export default function Home() {
   const [severity, setSeverity] = useState('All severity');
   const [ack, setAck] = useState<string[]>([]);
   const [notice, setNotice] = useState('');
+  const [telcoSubTab, setTelcoSubTab] = useState<'Overview & Market Share' | 'QoS & Performance' | 'Infrastructure & BTS' | 'District Ranking & Outages'>('Overview & Market Share');
+  const [districtSearch, setDistrictSearch] = useState('');
 
   // Pipeline state
   const [isStreaming, setIsStreaming] = useState(true);
@@ -276,6 +289,7 @@ export default function Home() {
   const totalCapacityGbps = cablesData.reduce((acc, c) => acc + c.capacityTbps * 1000, 0);
   const overallCableUtil = ((totalTrafficGbps / totalCapacityGbps) * 100).toFixed(1);
   const avgDownloadSpeed = (operatorsData.reduce((acc, op) => acc + op.throughputMbps, 0) / operatorsData.length).toFixed(1);
+  const avgLatency = Math.round(operatorsData.reduce((acc, op) => acc + op.avgLatencyMs, 0) / operatorsData.length);
 
   const filtered = assets.filter((a) => (division === 'All Bangladesh' || a.division === division) && (sector === 'All sectors' || a.sector === sector) && layers.includes(a.sector));
   const alerts = incidents.filter((a) => (division === 'All Bangladesh' || a.division === division) && (sector === 'All sectors' || a.sector === sector) && (severity === 'All severity' || a.severity === severity));
@@ -622,7 +636,7 @@ export default function Home() {
                 BANGLADESH <span>/</span> ICT MINISTRY TELEMETRY COMMAND CENTER
               </div>
               <h1>{page === 'Overview' ? 'National Overview' : page}</h1>
-              <p>{isTelcoView ? 'Real-time telecommunication spectrum, 4G/5G coverage, network speeds, and subsea bandwidth analytics.' : 'Real-time telemetry monitoring for electricity shortages, load shedding, and network operations.'}</p>
+              <p>{isTelcoView ? 'Real-time telecommunication spectrum, 4G/5G coverage, subscriber penetration, network speeds, and subsea bandwidth analytics.' : 'Real-time telemetry monitoring for electricity shortages, load shedding, and network operations.'}</p>
             </div>
             <div className="title-actions">
               <Picker
@@ -669,48 +683,48 @@ export default function Home() {
             </span>
           </div>
 
-          {/* Dynamic Top Metrics Cards Switcher (Telecom vs Electricity/Overview) */}
+          {/* Dynamic Top Metrics Cards Switcher */}
           {['Overview', 'Live Telemetry', 'Electricity', 'Telecom', 'National map'].includes(page) && (
             <div className="metrics">
               {isTelcoView
                 ? [
                     {
-                      label: '4G / 5G Mobile Coverage',
-                      value: `${avgUptime}%`,
-                      unit: 'online',
-                      icon: Wifi,
-                      sub: `${activeTowers.toLocaleString()} of ${totalTowers.toLocaleString()} tower sites live`,
-                      detail: `4G: 78.5% · 5G: 9.8% · 2G/3G: 11.7%`,
+                      label: 'Total Mobile Subscribers',
+                      value: '185.80',
+                      unit: 'Million',
+                      icon: Users,
+                      sub: '131.25M Internet Subs (75.4% Penetration)',
+                      detail: 'Mobile Broadband Penetration: 68.2%',
                       color: '#65c7ab',
                       id: 'Mobile subscriptions',
                     },
                     {
-                      label: 'Average Download Speed',
-                      value: avgDownloadSpeed,
+                      label: 'Avg Speed & Latency',
+                      value: `${avgDownloadSpeed}`,
                       unit: 'Mbps',
-                      icon: Radio,
-                      sub: 'National Avg DL: 34.8 Mbps · UL: 14.2 Mbps',
-                      detail: `Avg Latency: ${cablesData[0].latencyMs} ms · Packet Loss: 0.28%`,
+                      icon: Signal,
+                      sub: `Latency: ${avgLatency} ms · Call Drop Rate: 0.38%`,
+                      detail: `Download: ${avgDownloadSpeed} Mbps · Upload: 14.2 Mbps`,
                       color: '#70b8f4',
                       id: 'Mobile subscriptions',
                     },
                     {
-                      label: 'Active Bandwidth Stream',
-                      value: (totalTrafficGbps / 1000).toFixed(2),
-                      unit: 'Tbps',
+                      label: 'National Data Consumption',
+                      value: '4,280',
+                      unit: 'PB/mo',
                       icon: Activity,
-                      sub: 'Subsea Cables & NTTN Core Fiber Stream',
-                      detail: 'SEA-ME-WE 4 & SEA-ME-WE 5 Landing Stations',
+                      sub: '14.2 GB / user / month average',
+                      detail: 'Subsea Traffic: 4.10 Tbps active stream',
                       color: '#6ccaff',
                       id: 'Subsea Cable Bandwidth',
                     },
                     {
-                      label: 'Subsea Bandwidth State',
-                      value: `${overallCableUtil}%`,
-                      unit: 'utilized',
+                      label: 'Total BTS Sites & Fiber',
+                      value: '48,620',
+                      unit: 'BTS',
                       icon: Server,
-                      sub: `${(totalCapacityGbps / 1000).toFixed(1)} Tbps Total Subsea Capacity`,
-                      detail: `SEA-ME-WE 4 (${cablesData[0].utilizationPct}%) · SEA-ME-WE 5 (${cablesData[1].utilizationPct}%)`,
+                      sub: '42.5% Fiberized Towers · 162.4k km Fiber',
+                      detail: `4G Coverage: 98.4% · 5G Coverage: 14.8%`,
                       color: '#e6b561',
                       id: 'Subsea Cable Bandwidth',
                     },
@@ -849,131 +863,436 @@ export default function Home() {
             </div>
           )}
 
-          {/* DEDICATED TELECOM COMMAND PAGE & METRICS MATRIX */}
+          {/* DEDICATED TELECOM COMMAND PAGE WITH SUB-MENUS & ALL 20 METRICS + DIAGRAMS */}
           {page === 'Telecom' && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-              <div className="map-layout expanded">{map}</div>
-
-              {/* Telco Operator Spectrum & Network Speed Matrix */}
-              <section className="panel data-panel">
-                <div className="section-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div>
-                    <h2>Telco Operator Performance & Spectrum Matrix</h2>
-                    <p className="metadata">Active subscribers, download/upload speeds, latency, packet loss, and spectrum allocation across operators.</p>
-                  </div>
-                  <Tag tone="green">BTRC REGULATORY STREAM</Tag>
-                </div>
-                <div className="table-responsive">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        {['Operator', 'Active Subscribers', '4G Coverage', '5G Nodes', 'Avg Speed (DL/UL)', 'Latency (ms)', 'Packet Loss', 'Site Uptime', 'Active Spectrum'].map((h) => (
-                          <TableHead key={h}>{h}</TableHead>
-                        ))}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {operatorsData.map((op) => (
-                        <TableRow key={op.operator}>
-                          <TableCell style={{ fontWeight: 600 }}>
-                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
-                              <i className="dot" style={{ background: op.color }} />
-                              {op.operator}
-                            </span>
-                          </TableCell>
-                          <TableCell>{op.subscribersM.toFixed(2)} Million</TableCell>
-                          <TableCell>
-                            <Tag tone="green">{op.tech4G}%</Tag>
-                          </TableCell>
-                          <TableCell>{(op.tech5G * 140).toLocaleString()} sites</TableCell>
-                          <TableCell>{op.throughputMbps} / {(op.throughputMbps * 0.42).toFixed(1)} Mbps</TableCell>
-                          <TableCell style={{ fontFamily: 'monospace' }}>{op.avgLatencyMs} ms</TableCell>
-                          <TableCell>{op.packetLossPct}%</TableCell>
-                          <TableCell>
-                            <Progress value={op.siteUptimePct} style={{ width: '60px', display: 'inline-block', marginRight: '8px' }} />
-                            <span>{op.siteUptimePct}%</span>
-                          </TableCell>
-                          <TableCell>
-                            <span style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>
-                              900/1800/2100/2600 MHz
-                            </span>
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </section>
-
-              {/* Subsea Landing Stations & NTTN Core Optical Backbone State */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
-                {cablesData.map((cable) => (
-                  <section className="panel data-panel" key={cable.name}>
-                    <div className="section-top" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <div>
-                        <h2>{cable.name} Subsea Cable Station</h2>
-                        <p className="metadata">{cable.location}</p>
-                      </div>
-                      <Tag tone={cable.status === 'Optimal' ? 'green' : 'amber'}>{cable.status}</Tag>
-                    </div>
-                    <div style={{ margin: '15px 0' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px' }}>
-                        <span>International Bandwidth Traffic Stream</span>
-                        <strong>
-                          {cable.activeTrafficGbps} Gbps / {(cable.capacityTbps * 1000).toLocaleString()} Gbps ({cable.utilizationPct}%)
-                        </strong>
-                      </div>
-                      <Progress value={cable.utilizationPct} />
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--muted-foreground)', borderTop: '1px solid var(--border)', paddingTop: '10px', marginTop: '10px' }}>
-                      <span>Round-Trip Latency: {cable.latencyMs} ms</span>
-                      <span>Status: {cable.status} Operational</span>
-                    </div>
-                  </section>
+              {/* Telecom Sub-Navigation Bar */}
+              <div style={{ display: 'flex', gap: '10px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', flexWrap: 'wrap' }}>
+                {[
+                  ['Overview & Market Share', PieChart],
+                  ['QoS & Performance', BarChart3],
+                  ['Infrastructure & BTS', Server],
+                  ['District Ranking & Outages', Award],
+                ].map(([tabName, Icon]) => (
+                  <button
+                    key={tabName as string}
+                    onClick={() => setTelcoSubTab(tabName as any)}
+                    className="quiet-button"
+                    style={{
+                      background: telcoSubTab === tabName ? 'var(--primary)' : 'var(--subtle)',
+                      color: telcoSubTab === tabName ? '#fff' : 'var(--muted-foreground)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '8px',
+                      padding: '8px 16px',
+                      fontSize: '12px',
+                      fontWeight: 600,
+                    }}
+                  >
+                    <Icon size={15} />
+                    {tabName as string}
+                  </button>
                 ))}
               </div>
 
-              {/* Regional Division Telecom Matrix */}
-              <section className="panel data-panel">
-                <div className="section-top">
-                  <div>
-                    <h2>Regional Telecom Coverage & Speed Matrix (All 8 Divisions)</h2>
-                    <p className="metadata">Live 4G/5G site uptime, throughput speed, latency, and optical fiber backbone status by division.</p>
-                  </div>
-                </div>
-                <div className="table-responsive">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        {['Division', '4G/5G Site Uptime', 'Active Cell Sites', 'Avg Speed (Mbps)', 'Latency (ms)', 'Packet Loss', 'Fiber Backbone', 'Incidents'].map((h) => (
-                          <TableHead key={h}>{h}</TableHead>
-                        ))}
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {divisionsData.map((d) => (
-                        <TableRow key={d.division}>
-                          <TableCell style={{ fontWeight: 600 }}>{d.division}</TableCell>
-                          <TableCell>
-                            <Progress value={d.networkUptime} style={{ width: '60px', display: 'inline-block', marginRight: '8px' }} />
-                            <span>{d.networkUptime}%</span>
-                          </TableCell>
-                          <TableCell>
-                            {d.towersActive.toLocaleString()} / {d.towersTotal.toLocaleString()}
-                          </TableCell>
-                          <TableCell>{d.throughputMbps} Mbps</TableCell>
-                          <TableCell style={{ fontFamily: 'monospace' }}>{d.avgLatencyMs} ms</TableCell>
-                          <TableCell>{d.packetLossPct}%</TableCell>
-                          <TableCell>
-                            <Tag tone={d.networkUptime > 97 ? 'green' : 'amber'}>{d.networkUptime > 97 ? 'Optimal' : 'Degraded'}</Tag>
-                          </TableCell>
-                          <TableCell>{d.activeIncidents > 0 ? <Tag tone="red">{d.activeIncidents} Cut Alert</Tag> : <Tag tone="green">Normal</Tag>}</TableCell>
-                        </TableRow>
+              {/* Sub-Tab 1: Overview & Market Share */}
+              {telcoSubTab === 'Overview & Market Share' && (
+                <>
+                  <div className="map-layout expanded">{map}</div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
+                    {/* Market-Share Donut / Bar Visualization */}
+                    <section className="panel data-panel">
+                      <div className="section-top">
+                        <h2>Mobile Operator Market Share & Subscriber Totals</h2>
+                        <Tag tone="green">BTRC 2026</Tag>
+                      </div>
+                      <p className="metadata">Total Mobile Subscribers: 185.80 Million</p>
+                      {operatorsData.map((op) => {
+                        const pct = ((op.subscribersM / 185.8) * 100).toFixed(1);
+                        return (
+                          <div key={op.operator} style={{ marginTop: '16px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: 600 }}>
+                              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                <i className="dot" style={{ background: op.color, width: '10px', height: '10px' }} />
+                                {op.operator}
+                              </span>
+                              <span>
+                                {op.subscribersM.toFixed(2)}M ({pct}%)
+                              </span>
+                            </div>
+                            <Progress value={Number(pct)} style={{ height: '8px', marginTop: '6px' }} />
+                          </div>
+                        );
+                      })}
+                    </section>
+
+                    {/* Coverage-vs-Adoption Funnel Diagram */}
+                    <section className="panel data-panel">
+                      <div className="section-top">
+                        <h2>Coverage vs. Adoption Funnel</h2>
+                        <Tag tone="neutral">NATIONAL DIGITIZATION</Tag>
+                      </div>
+                      <p className="metadata">Population coverage down to 4G/5G power users.</p>
+                      {[
+                        ['1. Total Population', '173.0M', 100, '#62baf4'],
+                        ['2. 4G Population Covered', '170.2M', 98.4, '#56c4ac'],
+                        ['3. Total Mobile Subscribers', '185.8M', 92.1, '#ac9af2'],
+                        ['4. Internet Subscribers', '131.2M', 75.4, '#ecb663'],
+                        ['5. Active 4G/5G Data Users', '89.4M', 51.7, '#67caae'],
+                      ].map(([label, val, pct, color]) => (
+                        <div key={label as string} style={{ marginTop: '14px' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px' }}>
+                            <span>{label as string}</span>
+                            <strong>{val as string}</strong>
+                          </div>
+                          <div className="bar-track" style={{ height: '7px', marginTop: '5px' }}>
+                            <span style={{ width: `${pct}%`, background: color as string }} />
+                          </div>
+                        </div>
                       ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </section>
+                    </section>
+                  </div>
+
+                  {/* Digital Divide & Subscriber Trend */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: '20px' }}>
+                    <section className="panel trend-panel">
+                      <div className="section-top">
+                        <div>
+                          <h2>Mobile & Fixed Broadband Subscriber Growth</h2>
+                          <p className="metadata">Monthly subscriptions trend (Millions)</p>
+                        </div>
+                      </div>
+                      <div className="chart-legend">
+                        <span>
+                          <i className="dot healthy" />
+                          Mobile Subscriptions (185.80M)
+                        </span>
+                        <span>
+                          <i className="dot dot-0" />
+                          Fixed ISP Broadband (12.45M)
+                        </span>
+                      </div>
+                      <div className="line-chart">
+                        <div className="y-axis">
+                          {['190M', '150M', '100M', '50M'].map((v) => (
+                            <span key={v}>{v}</span>
+                          ))}
+                        </div>
+                        <svg viewBox="0 0 700 150" preserveAspectRatio="none" role="img" aria-label="Subscriber trends">
+                          <polyline points="0,28 116,36 232,51 348,65 464,75 580,104 700,107" fill="none" stroke="#64c7af" strokeWidth="3" />
+                          <polyline points="0,135 116,130 232,125 348,120 464,118 580,114 700,110" fill="none" stroke="#e0b86a" strokeWidth="2" strokeDasharray="4 4" />
+                        </svg>
+                      </div>
+                      <div className="x-axis">
+                        {['Jul 25', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan 26'].map((t) => (
+                          <span key={t}>{t}</span>
+                        ))}
+                      </div>
+                    </section>
+
+                    <section className="panel data-panel">
+                      <div className="section-top">
+                        <h2>National Digital Divide Index</h2>
+                        <Award size={18} style={{ color: 'var(--primary)' }} />
+                      </div>
+                      <div style={{ textAlign: 'center', margin: '20px 0' }}>
+                        <div style={{ fontSize: '42px', fontWeight: 700, color: 'var(--primary)' }}>78.4 <span style={{ fontSize: '16px' }}>/ 100</span></div>
+                        <p className="metadata">National Connectivity Index Score</p>
+                      </div>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                        <div style={{ background: 'var(--subtle)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Urban Score</span>
+                          <div style={{ fontSize: '20px', fontWeight: 600, color: '#56c4ac' }}>88.2</div>
+                        </div>
+                        <div style={{ background: 'var(--subtle)', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
+                          <span style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Rural Score</span>
+                          <div style={{ fontSize: '20px', fontWeight: 600, color: '#e6b561' }}>68.6</div>
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </>
+              )}
+
+              {/* Sub-Tab 2: QoS & Performance */}
+              {telcoSubTab === 'QoS & Performance' && (
+                <>
+                  {/* QoS Scorecards */}
+                  <div className="metrics">
+                    {[
+                      { label: 'Avg Download Speed', value: `${avgDownloadSpeed}`, unit: 'Mbps', icon: Signal, color: '#56c4ac', detail: 'Target > 20 Mbps (BTRC SLA)' },
+                      { label: 'Avg Network Latency', value: `${avgLatency}`, unit: 'ms', icon: Activity, color: '#70b8f4', detail: 'Target < 35 ms' },
+                      { label: 'Call Drop Rate', value: '0.38%', unit: 'drops', icon: PhoneCall, color: '#e6b561', detail: 'BTRC Benchmark < 1.0%' },
+                      { label: 'Consumer Complaint SLA', value: '94.6%', unit: 'resolved', icon: ShieldCheck, color: '#65c7ab', detail: '14,280 monthly grievances' },
+                    ].map((card) => (
+                      <div className="metric panel" key={card.label}>
+                        <div className="metric-label">
+                          <span>{card.label}</span>
+                          <card.icon size={17} style={{ color: card.color }} />
+                        </div>
+                        <div className="metric-value">
+                          {card.value} <span>{card.unit}</span>
+                        </div>
+                        <div className="metric-detail" style={{ color: card.color }}>
+                          • {card.detail}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Operator Comparison Bars */}
+                  <section className="panel data-panel">
+                    <div className="section-top">
+                      <h2>Operator QoS Benchmark Comparison</h2>
+                      <Tag tone="green">BTRC AUDIT</Tag>
+                    </div>
+                    <div className="table-responsive">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            {['Operator', 'DL Speed', 'UL Speed', 'Latency', 'Call Drop Rate', 'Packet Loss', 'BTRC Rating'].map((h) => (
+                              <TableHead key={h}>{h}</TableHead>
+                            ))}
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {operatorsData.map((op) => (
+                            <TableRow key={op.operator}>
+                              <TableCell style={{ fontWeight: 600 }}>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                  <i className="dot" style={{ background: op.color }} />
+                                  {op.operator}
+                                </span>
+                              </TableCell>
+                              <TableCell style={{ fontWeight: 600 }}>{op.throughputMbps} Mbps</TableCell>
+                              <TableCell>{op.uploadMbps} Mbps</TableCell>
+                              <TableCell style={{ fontFamily: 'monospace' }}>{op.avgLatencyMs} ms</TableCell>
+                              <TableCell>
+                                <Tag tone={op.callDropRate < 0.4 ? 'green' : 'amber'}>{op.callDropRate}%</Tag>
+                              </TableCell>
+                              <TableCell>{op.packetLossPct}%</TableCell>
+                              <TableCell>
+                                <Tag tone="green">Grade A</Tag>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </section>
+
+                  {/* Spectrum-Band Allocation Chart */}
+                  <section className="panel data-panel">
+                    <div className="section-top">
+                      <h2>Spectrum-Band MHz Allocation & Utilization</h2>
+                      <Tag tone="neutral">SPECTRUM REGISTRY</Tag>
+                    </div>
+                    <p className="metadata">Active MHz bandwidth allocated per operator across sub-1GHz, mid-band, and 5G NR prime frequencies.</p>
+                    <div className="table-responsive">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            {['Spectrum Band', 'Frequency Class', 'Grameenphone (MHz)', 'Robi Axiata (MHz)', 'Banglalink (MHz)', 'Teletalk (MHz)', 'Total Bandwidth'].map((h) => (
+                              <TableHead key={h}>{h}</TableHead>
+                            ))}
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {SPECTRUM_BANDS.map((sb) => (
+                            <TableRow key={sb.band}>
+                              <TableCell style={{ fontWeight: 600 }}>{sb.band}</TableCell>
+                              <TableCell>{sb.frequency}</TableCell>
+                              <TableCell>{sb.gpMHz} MHz</TableCell>
+                              <TableCell>{sb.robiMHz} MHz</TableCell>
+                              <TableCell>{sb.blMHz} MHz</TableCell>
+                              <TableCell>{sb.teletalkMHz} MHz</TableCell>
+                              <TableCell style={{ fontWeight: 600, color: 'var(--primary)' }}>{sb.totalMHz} MHz</TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </section>
+                </>
+              )}
+
+              {/* Sub-Tab 3: Infrastructure & BTS */}
+              {telcoSubTab === 'Infrastructure & BTS' && (
+                <>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '20px' }}>
+                    <div className="metric panel">
+                      <div className="metric-label"><span>Total BTS Towers</span><Server size={17} style={{ color: '#56c4ac' }} /></div>
+                      <div className="metric-value">48,620 <span>sites</span></div>
+                      <div className="metric-detail" style={{ color: '#56c4ac' }}>• 42.5% Fiberized Towers</div>
+                    </div>
+                    <div className="metric panel">
+                      <div className="metric-label"><span>NTTN Fiber Deployed</span><Activity size={17} style={{ color: '#70b8f4' }} /></div>
+                      <div className="metric-value">162,400 <span>km</span></div>
+                      <div className="metric-detail" style={{ color: '#70b8f4' }}>• Nationwide Transmission</div>
+                    </div>
+                    <div className="metric panel">
+                      <div className="metric-label"><span>Subsea Landing Stations</span><Globe2 size={17} style={{ color: '#e6b561' }} /></div>
+                      <div className="metric-value">5.4 <span>Tbps</span></div>
+                      <div className="metric-detail" style={{ color: '#e6b561' }}>• SEA-ME-WE 4 & SEA-ME-WE 5</div>
+                    </div>
+                  </div>
+
+                  {/* Subsea Cable & Backbone Fiber Topology */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
+                    {cablesData.map((cable) => (
+                      <section className="panel data-panel" key={cable.name}>
+                        <div className="section-top" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <div>
+                            <h2>{cable.name} Subsea Cable Station</h2>
+                            <p className="metadata">{cable.location}</p>
+                          </div>
+                          <Tag tone={cable.status === 'Optimal' ? 'green' : 'amber'}>{cable.status}</Tag>
+                        </div>
+                        <div style={{ margin: '15px 0' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px' }}>
+                            <span>International Bandwidth Stream</span>
+                            <strong>
+                              {cable.activeTrafficGbps} Gbps / {(cable.capacityTbps * 1000).toLocaleString()} Gbps ({cable.utilizationPct}%)
+                            </strong>
+                          </div>
+                          <Progress value={cable.utilizationPct} />
+                        </div>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--muted-foreground)', borderTop: '1px solid var(--border)', paddingTop: '10px' }}>
+                          <span>Latency to Core Hub: {cable.latencyMs} ms</span>
+                          <span>Link Status: {cable.status}</span>
+                        </div>
+                      </section>
+                    ))}
+                  </div>
+
+                  {/* Operator BTS Towers Breakdown */}
+                  <section className="panel data-panel">
+                    <div className="section-top">
+                      <h2>Operator Tower / BTS Sites Breakdown</h2>
+                      <Tag tone="green">INFRASTRUCTURE AUDIT</Tag>
+                    </div>
+                    <div className="table-responsive">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            {['Operator', 'Total BTS Sites', '4G BTS Count', '5G Nodes Count', 'Fiberized Sites %', 'Site Uptime'].map((h) => (
+                              <TableHead key={h}>{h}</TableHead>
+                            ))}
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {operatorsData.map((op) => (
+                            <TableRow key={op.operator}>
+                              <TableCell style={{ fontWeight: 600 }}>
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                                  <i className="dot" style={{ background: op.color }} />
+                                  {op.operator}
+                                </span>
+                              </TableCell>
+                              <TableCell style={{ fontWeight: 600 }}>{op.btsSites.toLocaleString()} sites</TableCell>
+                              <TableCell>{Math.round(op.btsSites * 0.82).toLocaleString()}</TableCell>
+                              <TableCell>{Math.round(op.btsSites * 0.08).toLocaleString()}</TableCell>
+                              <TableCell>{(op.tech4G * 0.6).toFixed(1)}%</TableCell>
+                              <TableCell>
+                                <Progress value={op.siteUptimePct} style={{ width: '60px', display: 'inline-block', marginRight: '8px' }} />
+                                <span>{op.siteUptimePct}%</span>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </section>
+                </>
+              )}
+
+              {/* Sub-Tab 4: District Ranking & Outages */}
+              {telcoSubTab === 'District Ranking & Outages' && (
+                <>
+                  {/* Best / Worst Performing Districts */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
+                    <section className="panel data-panel" style={{ borderTop: '3px solid #56c4ac' }}>
+                      <div className="section-top">
+                        <h2>Top 5 Best Performing Districts</h2>
+                        <Tag tone="green">TOP CONNECTIVITY</Tag>
+                      </div>
+                      {DISTRICT_RANKINGS.slice(0, 5).map((d) => (
+                        <div key={d.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+                          <div>
+                            <strong>#{d.rank} {d.name}</strong> <small style={{ color: 'var(--muted-foreground)' }}>({d.division})</small>
+                            <p style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Speed: {d.speedMbps} Mbps · Latency: {d.latencyMs}ms</p>
+                          </div>
+                          <Tag tone="green">{d.connectivityIndex} Index</Tag>
+                        </div>
+                      ))}
+                    </section>
+
+                    <section className="panel data-panel" style={{ borderTop: '3px solid #ed9786' }}>
+                      <div className="section-top">
+                        <h2>Top 5 Underserved / Lowest Performing</h2>
+                        <Tag tone="red">DIGITAL DIVIDE FOCUS</Tag>
+                      </div>
+                      {DISTRICT_RANKINGS.slice(-5).reverse().map((d) => (
+                        <div key={d.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 0', borderBottom: '1px solid var(--border)' }}>
+                          <div>
+                            <strong>#{d.rank} {d.name}</strong> <small style={{ color: 'var(--muted-foreground)' }}>({d.division})</small>
+                            <p style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>Speed: {d.speedMbps} Mbps · Latency: {d.latencyMs}ms</p>
+                          </div>
+                          <Tag tone="amber">{d.connectivityIndex} Index</Tag>
+                        </div>
+                      ))}
+                    </section>
+                  </div>
+
+                  {/* District-Wise Connectivity Table */}
+                  <section className="panel data-panel">
+                    <div className="section-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '15px' }}>
+                      <div>
+                        <h2>64-District Telecom Connectivity Matrix</h2>
+                        <p className="metadata">District ranking, index score, speed, call drop rate, and 4G coverage.</p>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'var(--subtle)', border: '1px solid var(--border)', padding: '4px 10px', borderRadius: '6px' }}>
+                        <Search size={14} />
+                        <input
+                          placeholder="Filter district..."
+                          value={districtSearch}
+                          onChange={(e) => setDistrictSearch(e.target.value)}
+                          style={{ background: 'none', border: 'none', outline: 'none', fontSize: '12px', color: 'var(--foreground)' }}
+                        />
+                      </div>
+                    </div>
+                    <div className="table-responsive">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            {['Rank', 'District', 'Division', 'Index Score', 'Avg Speed (Mbps)', 'Latency (ms)', 'Call Drop Rate', '4G Coverage', 'BTS Count', 'Status'].map((h) => (
+                              <TableHead key={h}>{h}</TableHead>
+                            ))}
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {DISTRICT_RANKINGS.filter((d) => (d.name + ' ' + d.division).toLowerCase().includes(districtSearch.toLowerCase())).map((d) => (
+                            <TableRow key={d.name}>
+                              <TableCell style={{ fontWeight: 700 }}>#{d.rank}</TableCell>
+                              <TableCell style={{ fontWeight: 600 }}>{d.name}</TableCell>
+                              <TableCell>{d.division}</TableCell>
+                              <TableCell style={{ fontWeight: 600, color: 'var(--primary)' }}>{d.connectivityIndex}</TableCell>
+                              <TableCell>{d.speedMbps} Mbps</TableCell>
+                              <TableCell style={{ fontFamily: 'monospace' }}>{d.latencyMs} ms</TableCell>
+                              <TableCell>{d.callDropRate}%</TableCell>
+                              <TableCell>{d.coverage4G}%</TableCell>
+                              <TableCell>{d.btsSites.toLocaleString()}</TableCell>
+                              <TableCell>
+                                <Tag tone={d.status === 'Top Tier' ? 'green' : d.status === 'Moderate' ? 'amber' : 'red'}>{d.status}</Tag>
+                              </TableCell>
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </section>
+                </>
+              )}
             </div>
           )}
 
