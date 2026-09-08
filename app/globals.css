@@ -147,3 +147,159 @@ body {
 @media(max-width:600px){.intelligence{grid-template-columns:1fr}.map-body{height:420px}.picker,.quiet-button{font-size:12px}.map-layers label{font-size:10px}.metric-detail{font-size:10px}.metric-bottom{font-size:10px}.map-heading .eyebrow{font-size:8px}.map-heading p{font-size:10px}.map-heading h2{font-size:15px}.chart-legend,.x-axis,.y-axis{font-size:10px}.page-footer{font-size:9px}.title-actions .primary-button{font-size:0}.page-title p{font-size:13px}.map-stage{right:-45px}.map-credit{font-size:9px}}
 /* Immersive infrastructure explorer. */
 .map-card{background:linear-gradient(140deg,var(--card),var(--background));border-radius:18px}.map-card.sector-electricity{--scene-color:#f6bf65;--scene-tint:#eba33d18}.map-card.sector-telecom{--scene-color:#6ccaff;--scene-tint:#469bfc22}.map-card.sector-all{--scene-color:#79dcc7;--scene-tint:#63d9b518}.map-heading{padding:24px 26px 12px}.map-heading h2{font-size:24px;letter-spacing:-.8px}.map-heading .eyebrow{color:var(--scene-color);font-size:10px;letter-spacing:1.7px}.map-body.is-three{height:650px;background:radial-gradient(ellipse at 45% 50%,var(--scene-tint),transparent 64%);overflow:hidden}.scene-shell{position:absolute;inset:0;isolation:isolate}.webgl-host{position:absolute;inset:0;touch-action:none}.webgl-host canvas{display:block;width:100%;height:100%;outline-offset:-3px}.is-three .map-stage,.is-three>.compass,.is-three>.map-controls,.is-three>.map-bottom{display:none}.is-three .map-layers{z-index:4;top:50px;left:22px;background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(14px);border-radius:12px;box-shadow:0 8px 28px #00000013}.scene-top-label{position:absolute;left:25px;top:16px;display:flex;align-items:center;gap:8px;pointer-events:none;font-size:10px;letter-spacing:1.5px;color:var(--scene-color)}.scene-top-label small{margin-left:12px;border:1px solid var(--border);color:var(--muted-foreground);padding:4px 6px;border-radius:5px;font-size:8px}.scene-live-dot{width:5px;height:5px;border-radius:50%;background:var(--scene-color);box-shadow:0 0 12px var(--scene-color)}.scene-controls{position:absolute;right:20px;top:50px;display:flex;flex-direction:column;border:1px solid var(--border);background:color-mix(in srgb,var(--card) 85%,transparent);backdrop-filter:blur(12px);border-radius:11px;overflow:hidden}.scene-controls button{width:38px;height:38px;display:grid;place-items:center;color:var(--muted-foreground);border-bottom:1px solid var(--border)}.scene-controls button:last-child{border:0}.scene-controls button:hover,.scene-controls button[aria-pressed=true]{color:var(--scene-color);background:var(--scene-tint)}.scene-asset-dock{position:absolute;bottom:39px;left:22px;right:22px;display:flex;gap:7px;overflow-x:auto;padding:8px 0;scrollbar-width:thin;scrollbar-color:var(--border) transparent}.scene-asset-dock button{flex:none;display:flex;align-items:center;gap:6px;max-width:145px;padding:8px 11px;border:1px solid var(--border);border-radius:7px;background:color-mix(in srgb,var(--card) 87%,transparent);backdrop-filter:blur(8px);color:var(--muted-foreground);font-size:11px}.scene-asset-dock button span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.scene-asset-dock svg{flex:none;color:var(--scene-color)}.scene-asset-dock button:hover,.scene-asset-dock button.active{border-color:var(--scene-color);color:var(--foreground);background:var(--subtle)}.scene-help{position:absolute;bottom:16px;left:0;right:0;pointer-events:none;text-align:center;font-size:11px;color:var(--muted-foreground)}.scene-help span{margin:0 9px;color:var(--scene-color)}.scene-hover{position:absolute;bottom:102px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:13px;padding:14px 17px;background:color-mix(in srgb,var(--popover) 92%,transparent);backdrop-filter:blur(18px);border:1px solid var(--scene-color);box-shadow:0 10px 45px #0002;border-radius:13px;max-width:90%;width:max-content;animation:card-in .2s ease}.scene-hover strong{font-size:13px}.scene-hover small{display:block;font-size:11px;color:var(--muted-foreground);margin-top:5px}.scene-hover>span{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--scene-tint);flex:none}.electric-symbol{color:#e8b15b}.telco-symbol{color:#5bb7f5}.scene-hover>button{margin-left:8px;color:var(--scene-color)}.scene-fallback{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;background:var(--card);z-index:5;font-size:14px;text-align:center;padding:30px}.scene-fallback button{color:var(--primary);text-decoration:underline}.map-layout{grid-template-columns:minmax(0,1fr) 290px}.map-credit{padding:12px 23px;line-height:1.5}.metric{border-radius:14px;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s;background:linear-gradient(145deg,var(--card),var(--background))}.metric:hover{transform:translateY(-4px);box-shadow:0 14px 25px #00000014}.metric:nth-child(1){border-top:2px solid #e5b45f}.metric:nth-child(2){border-top:2px solid #6fbded}.metric:nth-child(3){border-top:2px solid #78cdb4}.metric:nth-child(4){border-top:2px solid #ed9e8e}.brand-icon{box-shadow:0 0 23px #65c5a727}.health-panel,.attention-panel,.trend-panel,.operator-panel{border-radius:14px}.page-title h1{font-size:32px}.primary-button{box-shadow:0 5px 18px #69c8a517}.dark .app-main{background:radial-gradient(ellipse at 60% 0%,#18324255,transparent 55%)}.dark .panel{box-shadow:0 8px 30px #0000000a}.map-layout.expanded .map-body.is-three{height:760px}@keyframes card-in{from{opacity:0;margin-bottom:-6px}to{opacity:1;margin-bottom:0}}@media(max-width:1200px){.map-layout{grid-template-columns:1fr}.intelligence{display:grid;grid-template-columns:1fr 1fr}.map-body.is-three{height:620px}}@media(max-width:600px){.map-body.is-three{height:560px}.map-layout.expanded .map-body.is-three{height:620px}.map-heading{padding:19px 17px 8px}.map-heading h2{font-size:21px}.map-heading .eyebrow{font-size:8px}.scene-top-label{left:17px;font-size:8px;gap:5px}.scene-top-label small{font-size:7px;margin-left:4px}.is-three .map-layers{left:14px;padding:9px;top:49px}.is-three .map-layers label{font-size:10px}.scene-controls{right:14px}.scene-controls button{width:33px;height:34px}.scene-asset-dock{left:14px;right:14px}.scene-help{font-size:10px}.scene-hover{padding:11px;gap:8px;bottom:107px}.scene-hover strong{font-size:11px}.scene-hover small{font-size:10px}.scene-hover>span{width:30px;height:34px}.intelligence{grid-template-columns:1fr}.page-title h1{font-size:28px}}
+
+/* Responsive Table Container */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Telemetry Pipeline Control Bar */
+.telemetry-control-bar {
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.telemetry-controls-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.telemetry-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.telemetry-btn {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+}
+
+.telemetry-select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--muted-foreground);
+}
+
+.telemetry-select {
+  background: var(--subtle);
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 8px;
+  font-size: 11px;
+}
+
+.telemetry-speed-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.speed-btn {
+  background: var(--subtle);
+  color: var(--muted-foreground);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 10px;
+}
+
+.speed-btn.active {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+.telemetry-ticker-box {
+  flex: 1;
+  min-width: 280px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--subtle);
+  padding: 5px 12px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  font-size: 11px;
+}
+
+/* Comprehensive Responsive Breakpoint Rules */
+@media (max-width: 1024px) {
+  .telemetry-control-bar {
+    padding: 10px 20px;
+  }
+  .telemetry-ticker-box {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 16px;
+  }
+  .page-body {
+    padding: 16px;
+  }
+  .telemetry-control-bar {
+    padding: 10px 14px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .telemetry-controls-left {
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+  .page-title h1 {
+    font-size: 24px;
+  }
+  .bottom-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .telemetry-controls-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .telemetry-select-wrapper {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .telemetry-select {
+    flex: 1;
+  }
+  .page-title h1 {
+    font-size: 20px;
+  }
+  .map-body.is-three {
+    height: 440px;
+  }
+  .metric-value {
+    font-size: 24px;
+  }
+}
