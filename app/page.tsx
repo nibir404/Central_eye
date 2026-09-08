@@ -272,19 +272,27 @@ export default function Home() {
   const totalTowers = divisionsData.reduce((acc, d) => acc + d.towersTotal, 0);
   const activeTowers = divisionsData.reduce((acc, d) => acc + d.towersActive, 0);
   const avgUptime = ((activeTowers / totalTowers) * 100).toFixed(2);
+  const totalTrafficGbps = cablesData.reduce((acc, c) => acc + c.activeTrafficGbps, 0);
+  const totalCapacityGbps = cablesData.reduce((acc, c) => acc + c.capacityTbps * 1000, 0);
+  const overallCableUtil = ((totalTrafficGbps / totalCapacityGbps) * 100).toFixed(1);
+  const avgDownloadSpeed = (operatorsData.reduce((acc, op) => acc + op.throughputMbps, 0) / operatorsData.length).toFixed(1);
 
   const filtered = assets.filter((a) => (division === 'All Bangladesh' || a.division === division) && (sector === 'All sectors' || a.sector === sector) && layers.includes(a.sector));
   const alerts = incidents.filter((a) => (division === 'All Bangladesh' || a.division === division) && (sector === 'All sectors' || a.sector === sector) && (severity === 'All severity' || a.severity === severity));
 
   function go(p: string) {
     setPage(p);
-    if (p === 'Electricity' || p === 'Telecom') {
+    if (p === 'Electricity') {
       setView('3D');
-      setLayers(['Electricity', 'Telecom', 'Connections']);
+      setLayers(['Electricity', 'Connections']);
+      setSector('Electricity');
+    } else if (p === 'Telecom') {
+      setView('3D');
+      setLayers(['Telecom', 'Connections']);
+      setSector('Telecom');
+    } else {
+      setSector('All sectors');
     }
-    if (p === 'Electricity') setSector('Electricity');
-    else if (p === 'Telecom') setSector('Telecom');
-    else setSector('All sectors');
   }
 
   function exportData() {
@@ -488,6 +496,8 @@ export default function Home() {
     </section>
   );
 
+  const isTelcoView = page === 'Telecom' || sector === 'Telecom';
+
   return (
     <SidebarProvider>
       <Sidebar className="main-sidebar">
@@ -612,7 +622,7 @@ export default function Home() {
                 BANGLADESH <span>/</span> ICT MINISTRY TELEMETRY COMMAND CENTER
               </div>
               <h1>{page === 'Overview' ? 'National Overview' : page}</h1>
-              <p>{page === 'Overview' ? 'Real-time telemetry monitoring for electricity shortages, load shedding, and 3G/4G/5G mobile networks.' : 'Explore live infrastructure telemetry, regional breakdown, and network analysis.'}</p>
+              <p>{isTelcoView ? 'Real-time telecommunication spectrum, 4G/5G coverage, network speeds, and subsea bandwidth analytics.' : 'Real-time telemetry monitoring for electricity shortages, load shedding, and network operations.'}</p>
             </div>
             <div className="title-actions">
               <Picker
@@ -655,77 +665,138 @@ export default function Home() {
             </div>
             <span className="snapshot">
               <span className="dot healthy" /> Real-time Pipeline <span className="divider">|</span>
-              <Tag tone="green">LIVE TELEMETRY</Tag>
+              <Tag tone="green">{isTelcoView ? 'TELECOM TELEMETRY' : 'LIVE TELEMETRY'}</Tag>
             </span>
           </div>
 
-          {/* Metric Overview Bar with Live Updates */}
+          {/* Dynamic Top Metrics Cards Switcher (Telecom vs Electricity/Overview) */}
           {['Overview', 'Live Telemetry', 'Electricity', 'Telecom', 'National map'].includes(page) && (
             <div className="metrics">
-              {[
-                {
-                  label: 'National Power Shortage',
-                  value: totalShortage.toLocaleString(),
-                  unit: 'MW',
-                  icon: Zap,
-                  sub: `Demand: ${totalDemand.toLocaleString()} MW · Supply: ${totalSupply.toLocaleString()} MW`,
-                  detail: totalShortage > 0 ? `Deficit: ${((totalShortage / totalDemand) * 100).toFixed(1)}%` : 'Balanced Grid',
-                  color: totalShortage > 500 ? '#ed9786' : '#e6b561',
-                  id: 'Grid-installed capacity',
-                },
-                {
-                  label: 'Active Load Shedding',
-                  value: totalLoadShed.toLocaleString(),
-                  unit: 'MW',
-                  icon: RefreshCw,
-                  sub: `Grid Freq: ${avgFrequency} Hz (Target 50.0 Hz)`,
-                  detail: `Rotational load shedding active across ${divisionsData.filter((d) => d.loadSheddingMW > 0).length} divisions`,
-                  color: '#e6b561',
-                  id: 'Active Load Shedding',
-                },
-                {
-                  label: '4G / 5G Mobile Site Uptime',
-                  value: `${avgUptime}%`,
-                  unit: 'online',
-                  icon: Wifi,
-                  sub: `${activeTowers.toLocaleString()} of ${totalTowers.toLocaleString()} sites live`,
-                  detail: `${(totalTowers - activeTowers).toLocaleString()} sites down or on backup battery`,
-                  color: '#65c7ab',
-                  id: 'Mobile subscriptions',
-                },
-                {
-                  label: 'Subsea Cable Bandwidth',
-                  value: (cablesData.reduce((acc, c) => acc + c.activeTrafficGbps, 0) / 1000).toFixed(2),
-                  unit: 'Tbps',
-                  icon: Server,
-                  sub: 'SEA-ME-WE 4 & SEA-ME-WE 5 Landing Stations',
-                  detail: `Average latency: ${cablesData[0].latencyMs} ms to international hubs`,
-                  color: '#70b8f4',
-                  id: 'Subsea Cable Bandwidth',
-                },
-              ].map((m, i) => (
-                <button className="metric panel" key={m.label} onClick={() => (i === 1 ? go('Live Telemetry') : i === 2 ? go('Telecom') : setSource(m.id))}>
-                  <div className="metric-label">
-                    <span>{m.label}</span>
-                    <m.icon size={17} style={{ color: m.color }} />
-                  </div>
-                  <div className="metric-value">
-                    {m.value}
-                    <span>{m.unit}</span>
-                  </div>
-                  <div className="metric-detail" style={{ color: m.color }}>
-                    <span>•</span> {m.detail}
-                  </div>
-                  <div className="metric-bottom">
-                    <span>{m.sub}</span>
-                    {i > 1 && <Spark color={m.color} />}
-                  </div>
-                </button>
-              ))}
+              {isTelcoView
+                ? [
+                    {
+                      label: '4G / 5G Mobile Coverage',
+                      value: `${avgUptime}%`,
+                      unit: 'online',
+                      icon: Wifi,
+                      sub: `${activeTowers.toLocaleString()} of ${totalTowers.toLocaleString()} tower sites live`,
+                      detail: `4G: 78.5% · 5G: 9.8% · 2G/3G: 11.7%`,
+                      color: '#65c7ab',
+                      id: 'Mobile subscriptions',
+                    },
+                    {
+                      label: 'Average Download Speed',
+                      value: avgDownloadSpeed,
+                      unit: 'Mbps',
+                      icon: Radio,
+                      sub: 'National Avg DL: 34.8 Mbps · UL: 14.2 Mbps',
+                      detail: `Avg Latency: ${cablesData[0].latencyMs} ms · Packet Loss: 0.28%`,
+                      color: '#70b8f4',
+                      id: 'Mobile subscriptions',
+                    },
+                    {
+                      label: 'Active Bandwidth Stream',
+                      value: (totalTrafficGbps / 1000).toFixed(2),
+                      unit: 'Tbps',
+                      icon: Activity,
+                      sub: 'Subsea Cables & NTTN Core Fiber Stream',
+                      detail: 'SEA-ME-WE 4 & SEA-ME-WE 5 Landing Stations',
+                      color: '#6ccaff',
+                      id: 'Subsea Cable Bandwidth',
+                    },
+                    {
+                      label: 'Subsea Bandwidth State',
+                      value: `${overallCableUtil}%`,
+                      unit: 'utilized',
+                      icon: Server,
+                      sub: `${(totalCapacityGbps / 1000).toFixed(1)} Tbps Total Subsea Capacity`,
+                      detail: `SEA-ME-WE 4 (${cablesData[0].utilizationPct}%) · SEA-ME-WE 5 (${cablesData[1].utilizationPct}%)`,
+                      color: '#e6b561',
+                      id: 'Subsea Cable Bandwidth',
+                    },
+                  ].map((m, i) => (
+                    <button className="metric panel" key={m.label} onClick={() => setSource(m.id)}>
+                      <div className="metric-label">
+                        <span>{m.label}</span>
+                        <m.icon size={17} style={{ color: m.color }} />
+                      </div>
+                      <div className="metric-value">
+                        {m.value}
+                        <span>{m.unit}</span>
+                      </div>
+                      <div className="metric-detail" style={{ color: m.color }}>
+                        <span>•</span> {m.detail}
+                      </div>
+                      <div className="metric-bottom">
+                        <span>{m.sub}</span>
+                        <Spark color={m.color} />
+                      </div>
+                    </button>
+                  ))
+                : [
+                    {
+                      label: 'National Power Shortage',
+                      value: totalShortage.toLocaleString(),
+                      unit: 'MW',
+                      icon: Zap,
+                      sub: `Demand: ${totalDemand.toLocaleString()} MW · Supply: ${totalSupply.toLocaleString()} MW`,
+                      detail: totalShortage > 0 ? `Deficit: ${((totalShortage / totalDemand) * 100).toFixed(1)}%` : 'Balanced Grid',
+                      color: totalShortage > 500 ? '#ed9786' : '#e6b561',
+                      id: 'Grid-installed capacity',
+                    },
+                    {
+                      label: 'Active Load Shedding',
+                      value: totalLoadShed.toLocaleString(),
+                      unit: 'MW',
+                      icon: RefreshCw,
+                      sub: `Grid Freq: ${avgFrequency} Hz (Target 50.0 Hz)`,
+                      detail: `Rotational load shedding active across ${divisionsData.filter((d) => d.loadSheddingMW > 0).length} divisions`,
+                      color: '#e6b561',
+                      id: 'Active Load Shedding',
+                    },
+                    {
+                      label: '4G / 5G Mobile Site Uptime',
+                      value: `${avgUptime}%`,
+                      unit: 'online',
+                      icon: Wifi,
+                      sub: `${activeTowers.toLocaleString()} of ${totalTowers.toLocaleString()} sites live`,
+                      detail: `${(totalTowers - activeTowers).toLocaleString()} sites down or on backup battery`,
+                      color: '#65c7ab',
+                      id: 'Mobile subscriptions',
+                    },
+                    {
+                      label: 'Subsea Cable Bandwidth',
+                      value: (totalTrafficGbps / 1000).toFixed(2),
+                      unit: 'Tbps',
+                      icon: Server,
+                      sub: 'SEA-ME-WE 4 & SEA-ME-WE 5 Landing Stations',
+                      detail: `Average latency: ${cablesData[0].latencyMs} ms to international hubs`,
+                      color: '#70b8f4',
+                      id: 'Subsea Cable Bandwidth',
+                    },
+                  ].map((m, i) => (
+                    <button className="metric panel" key={m.label} onClick={() => (i === 1 ? go('Live Telemetry') : i === 2 ? go('Telecom') : setSource(m.id))}>
+                      <div className="metric-label">
+                        <span>{m.label}</span>
+                        <m.icon size={17} style={{ color: m.color }} />
+                      </div>
+                      <div className="metric-value">
+                        {m.value}
+                        <span>{m.unit}</span>
+                      </div>
+                      <div className="metric-detail" style={{ color: m.color }}>
+                        <span>•</span> {m.detail}
+                      </div>
+                      <div className="metric-bottom">
+                        <span>{m.sub}</span>
+                        {i > 1 && <Spark color={m.color} />}
+                      </div>
+                    </button>
+                  ))}
             </div>
           )}
 
-          {/* Page 1: Overview and National Map */}
+          {/* Overview & National Map View */}
           {['Overview', 'National map'].includes(page) && (
             <div className={page === 'National map' ? 'map-layout expanded' : 'map-layout'}>
               {map}
@@ -739,7 +810,7 @@ export default function Home() {
                   {[
                     ['Electricity Shortage', totalShortage > 500 ? 'Critical Deficit' : 'Active Shedding', `${totalShortage} MW shortage (${totalLoadShed} MW shedding)`],
                     ['Telco 3G/4G/5G Network', avgUptime < 97 ? 'Attention' : 'Normal', `Site Uptime: ${avgUptime}% · ${activeTowers.toLocaleString()} towers live`],
-                    ['Subsea Fiber Landing', 'Optimal', `Traffic: ${(cablesData.reduce((a, c) => a + c.activeTrafficGbps, 0) / 1000).toFixed(2)} Tbps (SEA-ME-WE 4/5)`],
+                    ['Subsea Fiber Landing', 'Optimal', `Traffic: ${(totalTrafficGbps / 1000).toFixed(2)} Tbps (SEA-ME-WE 4/5)`],
                   ].map(([n, s, d], i) => (
                     <div className="health-row" key={n}>
                       <div className={'health-icon health-' + i}>{i === 0 ? <Zap size={18} /> : i === 1 ? <Radio size={18} /> : <ShieldCheck size={18} />}</div>
@@ -775,6 +846,134 @@ export default function Home() {
                   </button>
                 </section>
               </aside>
+            </div>
+          )}
+
+          {/* DEDICATED TELECOM COMMAND PAGE & METRICS MATRIX */}
+          {page === 'Telecom' && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+              <div className="map-layout expanded">{map}</div>
+
+              {/* Telco Operator Spectrum & Network Speed Matrix */}
+              <section className="panel data-panel">
+                <div className="section-top" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <h2>Telco Operator Performance & Spectrum Matrix</h2>
+                    <p className="metadata">Active subscribers, download/upload speeds, latency, packet loss, and spectrum allocation across operators.</p>
+                  </div>
+                  <Tag tone="green">BTRC REGULATORY STREAM</Tag>
+                </div>
+                <div className="table-responsive">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        {['Operator', 'Active Subscribers', '4G Coverage', '5G Nodes', 'Avg Speed (DL/UL)', 'Latency (ms)', 'Packet Loss', 'Site Uptime', 'Active Spectrum'].map((h) => (
+                          <TableHead key={h}>{h}</TableHead>
+                        ))}
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {operatorsData.map((op) => (
+                        <TableRow key={op.operator}>
+                          <TableCell style={{ fontWeight: 600 }}>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                              <i className="dot" style={{ background: op.color }} />
+                              {op.operator}
+                            </span>
+                          </TableCell>
+                          <TableCell>{op.subscribersM.toFixed(2)} Million</TableCell>
+                          <TableCell>
+                            <Tag tone="green">{op.tech4G}%</Tag>
+                          </TableCell>
+                          <TableCell>{(op.tech5G * 140).toLocaleString()} sites</TableCell>
+                          <TableCell>{op.throughputMbps} / {(op.throughputMbps * 0.42).toFixed(1)} Mbps</TableCell>
+                          <TableCell style={{ fontFamily: 'monospace' }}>{op.avgLatencyMs} ms</TableCell>
+                          <TableCell>{op.packetLossPct}%</TableCell>
+                          <TableCell>
+                            <Progress value={op.siteUptimePct} style={{ width: '60px', display: 'inline-block', marginRight: '8px' }} />
+                            <span>{op.siteUptimePct}%</span>
+                          </TableCell>
+                          <TableCell>
+                            <span style={{ fontSize: '11px', color: 'var(--muted-foreground)' }}>
+                              900/1800/2100/2600 MHz
+                            </span>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </section>
+
+              {/* Subsea Landing Stations & NTTN Core Optical Backbone State */}
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '20px' }}>
+                {cablesData.map((cable) => (
+                  <section className="panel data-panel" key={cable.name}>
+                    <div className="section-top" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <div>
+                        <h2>{cable.name} Subsea Cable Station</h2>
+                        <p className="metadata">{cable.location}</p>
+                      </div>
+                      <Tag tone={cable.status === 'Optimal' ? 'green' : 'amber'}>{cable.status}</Tag>
+                    </div>
+                    <div style={{ margin: '15px 0' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '8px' }}>
+                        <span>International Bandwidth Traffic Stream</span>
+                        <strong>
+                          {cable.activeTrafficGbps} Gbps / {(cable.capacityTbps * 1000).toLocaleString()} Gbps ({cable.utilizationPct}%)
+                        </strong>
+                      </div>
+                      <Progress value={cable.utilizationPct} />
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--muted-foreground)', borderTop: '1px solid var(--border)', paddingTop: '10px', marginTop: '10px' }}>
+                      <span>Round-Trip Latency: {cable.latencyMs} ms</span>
+                      <span>Status: {cable.status} Operational</span>
+                    </div>
+                  </section>
+                ))}
+              </div>
+
+              {/* Regional Division Telecom Matrix */}
+              <section className="panel data-panel">
+                <div className="section-top">
+                  <div>
+                    <h2>Regional Telecom Coverage & Speed Matrix (All 8 Divisions)</h2>
+                    <p className="metadata">Live 4G/5G site uptime, throughput speed, latency, and optical fiber backbone status by division.</p>
+                  </div>
+                </div>
+                <div className="table-responsive">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        {['Division', '4G/5G Site Uptime', 'Active Cell Sites', 'Avg Speed (Mbps)', 'Latency (ms)', 'Packet Loss', 'Fiber Backbone', 'Incidents'].map((h) => (
+                          <TableHead key={h}>{h}</TableHead>
+                        ))}
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {divisionsData.map((d) => (
+                        <TableRow key={d.division}>
+                          <TableCell style={{ fontWeight: 600 }}>{d.division}</TableCell>
+                          <TableCell>
+                            <Progress value={d.networkUptime} style={{ width: '60px', display: 'inline-block', marginRight: '8px' }} />
+                            <span>{d.networkUptime}%</span>
+                          </TableCell>
+                          <TableCell>
+                            {d.towersActive.toLocaleString()} / {d.towersTotal.toLocaleString()}
+                          </TableCell>
+                          <TableCell>{d.throughputMbps} Mbps</TableCell>
+                          <TableCell style={{ fontFamily: 'monospace' }}>{d.avgLatencyMs} ms</TableCell>
+                          <TableCell>{d.packetLossPct}%</TableCell>
+                          <TableCell>
+                            <Tag tone={d.networkUptime > 97 ? 'green' : 'amber'}>{d.networkUptime > 97 ? 'Optimal' : 'Degraded'}</Tag>
+                          </TableCell>
+                          <TableCell>{d.activeIncidents > 0 ? <Tag tone="red">{d.activeIncidents} Cut Alert</Tag> : <Tag tone="green">Normal</Tag>}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              </section>
             </div>
           )}
 
