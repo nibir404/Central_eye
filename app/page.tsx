@@ -1023,6 +1023,26 @@ export default function Home() {
                       color: '#e6b561',
                       id: 'Active Load Shedding',
                     },
+                    {
+                      label: 'Cross-Border Power Imports',
+                      value: (POWERGRID_METADATA.latest_entry.cross_border?.total_imports_mw ?? 2409).toLocaleString(),
+                      unit: 'MW',
+                      icon: Server,
+                      sub: `Adani: ${POWERGRID_METADATA.latest_entry.cross_border?.india_adani_mw ?? 1414} MW · Bheramara: ${POWERGRID_METADATA.latest_entry.cross_border?.india_bheramara_mw ?? 823} MW`,
+                      detail: `${(((POWERGRID_METADATA.latest_entry.cross_border?.total_imports_mw ?? 2409) / (POWERGRID_METADATA.latest_entry.total_gen_mw || 1)) * 100).toFixed(1)}% of total generation mix`,
+                      color: '#70b8f4',
+                      id: 'Grid-installed capacity',
+                    },
+                    {
+                      label: 'National Power Generation',
+                      value: (POWERGRID_METADATA.latest_entry.total_gen_mw ?? 15344).toLocaleString(),
+                      unit: 'MW',
+                      icon: Activity,
+                      sub: `Coal: ${(POWERGRID_METADATA.latest_entry.coal_mw ?? 4888).toLocaleString()} MW · Gas: ${(POWERGRID_METADATA.latest_entry.gas_mw ?? 4857).toLocaleString()} MW`,
+                      detail: `Thermal & Hydro generation + Interconnectors`,
+                      color: '#65c7ab',
+                      id: 'Grid-installed capacity',
+                    },
                   ].map((m, i) => (
                     <button className="metric panel" key={m.label} onClick={() => (i === 1 ? go('Live Telemetry') : setSource(m.id))}>
                       <div className="metric-label">
@@ -1038,7 +1058,7 @@ export default function Home() {
                       </div>
                       <div className="metric-bottom">
                         <span>{m.sub}</span>
-                        {i > 1 && <Spark color={m.color} />}
+                        <Spark color={m.color} />
                       </div>
                     </button>
                   ))}
