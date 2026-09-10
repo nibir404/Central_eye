@@ -285,7 +285,7 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
           </div>
 
           <div style={{ width: '100%', height: '320px' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={200}>
               <ComposedChart data={chartData} margin={{ top: 10, right: 20, bottom: 40, left: -10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
                 <XAxis
@@ -331,7 +331,7 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
           </div>
 
           <div style={{ width: '100%', height: '320px', display: 'flex', justifyContent: 'center' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={200}>
               <RadarChart cx="50%" cy="50%" outerRadius="75%" data={categoryRadarData}>
                 <PolarGrid stroke="rgba(255,255,255,0.12)" />
                 <PolarAngleAxis dataKey="category" stroke="var(--foreground)" fontSize={12} fontWeight={600} />
@@ -371,7 +371,7 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
           </div>
 
           <div style={{ width: '100%', height: '240px' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={200}>
               <PieChart>
                 <Pie
                   data={categoryPieData}
@@ -417,7 +417,7 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
           </div>
 
           <div style={{ width: '100%', height: '240px' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={200}>
               <AreaChart data={areaTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorCross" x1="0" y1="0" x2="0" y2="1">

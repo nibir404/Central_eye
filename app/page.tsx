@@ -1066,7 +1066,8 @@ export default function Home() {
 
           {/* Overview & National Map View */}
           {['Overview', 'National map'].includes(page) && (
-            <div className={page === 'National map' ? 'map-layout expanded' : 'map-layout'}>
+            <>
+              <div className={page === 'National map' ? 'map-layout expanded' : 'map-layout'}>
               {map}
               <aside className="intelligence">
                 <section className="panel health-panel">
@@ -1115,6 +1116,14 @@ export default function Home() {
                 </section>
               </aside>
             </div>
+
+            {page === 'Overview' && (
+              <div style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                <SLACrossCheckView slaOperators={slaOperators} />
+                <BGPHurricaneReportView bgpReports={bgpReports} />
+              </div>
+            )}
+          </>
           )}
 
           {/* DEDICATED ELECTRICITY COMMAND PAGE POWERED BY LIVE POWER GRID BANGLADESH PLC SCRAPED DATA */}
@@ -1832,6 +1841,10 @@ export default function Home() {
                 onSelectTab={(id) => setTelcoSubTabId(id)}
                 setNotice={setNotice}
               />
+
+              {/* SLA Cross-Check Matrix & BGP Hurricane Electric Visual Analytics */}
+              <SLACrossCheckView slaOperators={slaOperators} />
+              <BGPHurricaneReportView bgpReports={bgpReports} />
             </div>
           )}
 

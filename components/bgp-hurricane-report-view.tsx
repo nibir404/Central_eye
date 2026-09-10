@@ -367,7 +367,7 @@ export default function BGPHurricaneReportView({ bgpReports }: Props) {
           </div>
 
           <div style={{ width: '100%', height: '340px' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={200}>
               <ScatterChart margin={{ top: 20, right: 20, bottom: 20, left: -10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
                 <XAxis type="number" dataKey="adjacencies" name="Adjacencies" unit=" peers" stroke="var(--muted-foreground)" fontSize={11} domain={[20, 160]} />
@@ -415,7 +415,7 @@ export default function BGPHurricaneReportView({ bgpReports }: Props) {
           </div>
 
           <div style={{ width: '100%', height: '240px' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={200}>
               <PieChart>
                 <Pie
                   data={ipVersionRatio}
@@ -461,7 +461,7 @@ export default function BGPHurricaneReportView({ bgpReports }: Props) {
           </div>
 
           <div style={{ width: '100%', height: '240px' }}>
-            <ResponsiveContainer width="100%" height="100%">
+            <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={200}>
               <BarChart data={tier1Distribution} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
                 <XAxis dataKey="name" stroke="var(--muted-foreground)" fontSize={11} />
