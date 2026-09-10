@@ -36,7 +36,7 @@ import {
   BarChart3,
   Cpu,
 } from 'lucide-react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import HE3DGlobeScene from '@/components/he-3d-globe-scene';
 
 type Props = {
   bgpReports: IIGBGPReport[];
@@ -137,7 +137,7 @@ export default function BGPHurricaneReportView({ bgpReports }: Props) {
 
         <div style={{ display: 'flex', gap: '10px' }}>
           <a
-            href="https://he.net/"
+            href="https://he.net/3d-map/"
             target="_blank"
             rel="noopener noreferrer"
             style={{
@@ -154,10 +154,13 @@ export default function BGPHurricaneReportView({ bgpReports }: Props) {
               textDecoration: 'none',
             }}
           >
-            Hurricane Electric BGP <ExternalLink size={13} />
+            Hurricane Electric 3D Map (he.net/3d-map) <ExternalLink size={13} />
           </a>
         </div>
       </div>
+
+      {/* 3D Hurricane Electric Global BGP Globe Scene (he.net/3d-map) */}
+      <HE3DGlobeScene bgpReports={bgpReports} />
 
       {/* KPI Cards Bar */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '16px' }}>
