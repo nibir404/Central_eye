@@ -270,7 +270,7 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
 
       {/* Visual Analytics Row 1: Dual Chart Section */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(480px, 1fr))', gap: '20px' }}>
-        {/* Chart 1: Operator Uptime Discrepancy Bar & Line Combo Chart */}
+        {/* Chart 1: Operator Uptime Discrepancy Stacked Bar Chart */}
         <section className="panel data-panel">
           <div className="section-top" style={{ marginBottom: '16px' }}>
             <div>
@@ -279,39 +279,75 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
                 Self-Reported vs. Customer Cross-Checked Uptime (%)
               </h2>
               <p className="metadata" style={{ margin: '4px 0 0 0' }}>
-                Contrasting claimed uptime (bars) against customer cross-checked SLA (lines). Highlighted gaps show inflation.
+                Stacked breakdown of customer cross-checked availability and discrepancy gap. Hover over any bar to view operator details.
               </p>
             </div>
           </div>
 
           <div style={{ width: '100%', height: '320px' }}>
             <ResponsiveContainer width="100%" height="100%" minWidth={100} minHeight={200}>
-              <ComposedChart data={chartData} margin={{ top: 10, right: 20, bottom: 40, left: -10 }}>
+              <BarChart data={chartData} margin={{ top: 10, right: 20, bottom: 20, left: -10 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
                 <XAxis
                   dataKey="name"
                   stroke="var(--muted-foreground)"
-                  fontSize={10}
-                  interval={0}
-                  angle={-25}
-                  textAnchor="end"
+                  tick={false}
+                  axisLine={{ stroke: 'rgba(255,255,255,0.15)' }}
                 />
-                <YAxis domain={[94, 100]} stroke="var(--muted-foreground)" fontSize={11} unit="%" />
+                <YAxis domain={[90, 100]} stroke="var(--muted-foreground)" fontSize={11} unit="%" />
                 <Tooltip
-                  contentStyle={{
-                    background: 'rgba(15, 23, 42, 0.95)',
-                    border: '1px solid var(--border)',
-                    borderRadius: '8px',
-                    color: '#fff',
-                    fontSize: '12px',
+                  content={({ active, payload }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      return (
+                        <div
+                          style={{
+                            background: 'rgba(15, 23, 42, 0.96)',
+                            border: '1px solid var(--border)',
+                            borderRadius: '8px',
+                            padding: '10px 14px',
+                            color: '#fff',
+                            fontSize: '12px',
+                            boxShadow: '0 8px 24px rgba(0,0,0,0.6)',
+                            minWidth: '220px',
+                          }}
+                        >
+                          <div style={{ fontWeight: 700, fontSize: '13px', marginBottom: '3px', color: '#fff' }}>
+                            {data.fullName}
+                          </div>
+                          <div style={{ fontSize: '11px', color: 'var(--muted-foreground)', marginBottom: '8px' }}>
+                            Category: <span style={{ color: CATEGORY_COLORS[data.Category] || '#62baf4', fontWeight: 600 }}>{data.Category}</span> · Status: <span style={{ color: data.status === 'Verified' ? '#56c4ac' : data.status === 'Minor Discrepancy' ? '#ecb663' : '#f87171', fontWeight: 600 }}>{data.status}</span>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <span style={{ color: '#56c4ac', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#56c4ac', display: 'inline-block' }} />
+                                Cross-Checked Uptime:
+                              </span>
+                              <strong>{data['Customer Cross-Checked (%)']}%</strong>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <span style={{ color: '#ecb663', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ecb663', display: 'inline-block' }} />
+                                Discrepancy Gap:
+                              </span>
+                              <strong>{data['Discrepancy Gap (%)']}%</strong>
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderTop: '1px solid var(--border)', paddingTop: '5px', marginTop: '3px' }}>
+                              <span style={{ color: '#62baf4', fontWeight: 600 }}>Self-Reported Uptime:</span>
+                              <strong>{data['Self-Reported Uptime (%)']}%</strong>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
                   }}
-                  formatter={(value: any, name: string) => [`${value}%`, name]}
                 />
                 <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
-                <Bar dataKey="Self-Reported Uptime (%)" fill="#62baf4" opacity={0.65} radius={[4, 4, 0, 0]} />
-                <Bar dataKey="Customer Cross-Checked (%)" fill="#56c4ac" radius={[4, 4, 0, 0]} />
-                <Line type="monotone" dataKey="Discrepancy Gap (%)" stroke="#ecb663" strokeWidth={2} dot={{ r: 4 }} />
-              </ComposedChart>
+                <Bar dataKey="Customer Cross-Checked (%)" stackId="a" fill="#56c4ac" radius={[0, 0, 2, 2]} />
+                <Bar dataKey="Discrepancy Gap (%)" stackId="a" fill="#ecb663" radius={[2, 2, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </section>

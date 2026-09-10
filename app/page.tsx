@@ -1023,28 +1023,8 @@ export default function Home() {
                       color: '#e6b561',
                       id: 'Active Load Shedding',
                     },
-                    {
-                      label: '4G / 5G Mobile Site Uptime',
-                      value: `${avgUptime}%`,
-                      unit: 'online',
-                      icon: Wifi,
-                      sub: `${activeTowers.toLocaleString()} of ${totalTowers.toLocaleString()} sites live`,
-                      detail: `${(totalTowers - activeTowers).toLocaleString()} sites down or on backup battery`,
-                      color: '#65c7ab',
-                      id: 'Mobile subscriptions',
-                    },
-                    {
-                      label: 'Subsea Cable Bandwidth',
-                      value: (totalTrafficGbps / 1000).toFixed(2),
-                      unit: 'Tbps',
-                      icon: Server,
-                      sub: 'SEA-ME-WE 4 & SEA-ME-WE 5 Landing Stations',
-                      detail: `Average latency: ${cablesData[0].latencyMs} ms to international hubs`,
-                      color: '#70b8f4',
-                      id: 'Subsea Cable Bandwidth',
-                    },
                   ].map((m, i) => (
-                    <button className="metric panel" key={m.label} onClick={() => (i === 1 ? go('Live Telemetry') : i === 2 ? go('Telecom') : setSource(m.id))}>
+                    <button className="metric panel" key={m.label} onClick={() => (i === 1 ? go('Live Telemetry') : setSource(m.id))}>
                       <div className="metric-label">
                         <span>{m.label}</span>
                         <m.icon size={17} style={{ color: m.color }} />
