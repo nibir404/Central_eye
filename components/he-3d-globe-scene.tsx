@@ -253,11 +253,12 @@ export default function HE3DGlobeScene({ bgpReports }: { bgpReports: IIGBGPRepor
     if (!cameraRef.current || !controlsRef.current) return;
     const cam = cameraRef.current;
 
-    let targetVec = new THREE.Vector3(0, 160, 430);
-    if (view === 'ASIA_BD') targetVec = latLonToVector3(22, 90, 360);
-    if (view === 'EUROPE') targetVec = latLonToVector3(50, 10, 360);
-    if (view === 'US_WEST') targetVec = latLonToVector3(38, -120, 360);
-    if (view === 'SUBSEA') targetVec = latLonToVector3(10, 80, 400);
+    let targetVec = latLonToVector3(20, 85, 360);
+    if (view === 'GLOBAL') targetVec = new THREE.Vector3(0, 30, 380);
+    if (view === 'ASIA_BD') targetVec = latLonToVector3(22, 90, 340);
+    if (view === 'EUROPE') targetVec = latLonToVector3(50, 10, 340);
+    if (view === 'US_WEST') targetVec = latLonToVector3(38, -120, 340);
+    if (view === 'SUBSEA') targetVec = latLonToVector3(10, 80, 360);
 
     const startPos = cam.position.clone();
     const startTime = performance.now();
@@ -268,6 +269,7 @@ export default function HE3DGlobeScene({ bgpReports }: { bgpReports: IIGBGPRepor
       const easeProgress = 0.5 - Math.cos(progress * Math.PI) / 2;
 
       cam.position.lerpVectors(startPos, targetVec, easeProgress);
+      controlsRef.current?.target.set(0, 0, 0);
       controlsRef.current?.update();
 
       if (progress < 1) {
@@ -291,6 +293,7 @@ export default function HE3DGlobeScene({ bgpReports }: { bgpReports: IIGBGPRepor
     }
 
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setSize(el.clientWidth, el.clientHeight);
     renderer.setClearColor(0x000000, 0);
     renderer.outputColorSpace = THREE.SRGBColorSpace;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
@@ -299,7 +302,9 @@ export default function HE3DGlobeScene({ bgpReports }: { bgpReports: IIGBGPRepor
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, el.clientWidth / el.clientHeight, 1, 2500);
-    camera.position.set(0, 160, 430);
+    // Initial camera position facing Bangladesh & Asia-Pacific cleanly centered
+    const initCamPos = latLonToVector3(20, 85, 370);
+    camera.position.copy(initCamPos);
     cameraRef.current = camera;
 
     const controls = new OrbitControls(camera, renderer.domElement);
@@ -307,6 +312,7 @@ export default function HE3DGlobeScene({ bgpReports }: { bgpReports: IIGBGPRepor
     controls.dampingFactor = 0.05;
     controls.minDistance = 170;
     controls.maxDistance = 950;
+    controls.target.set(0, 0, 0);
     controls.autoRotate = isRotating;
     controls.autoRotateSpeed = 0.75;
     controls.update();
