@@ -43,6 +43,7 @@ import {
   Maximize2,
   Minus,
   Moon,
+  Network,
   Pause,
   PhoneCall,
   PieChart,
@@ -65,6 +66,15 @@ import {
   Wifi,
   Zap,
 } from 'lucide-react';
+import SLACrossCheckView from '@/components/sla-crosscheck-view';
+import BGPHurricaneReportView from '@/components/bgp-hurricane-report-view';
+import {
+  INITIAL_LICENSE_SLA_OPERATORS,
+  INITIAL_IIG_BGP_REPORTS,
+  tickLicenseAndBgpTelemetry,
+  OperatorSLAData,
+  IIGBGPReport,
+} from '@/lib/license-bgp-data';
 import {
   SidebarProvider,
   Sidebar,
@@ -215,7 +225,9 @@ export default function Home() {
   const [ack, setAck] = useState<string[]>([]);
   const [notice, setNotice] = useState('');
   const [telcoSubTabId, setTelcoSubTabId] = useState<TelcoSubMenuId>('teledensity');
-  const [telcoSubTab, setTelcoSubTab] = useState<'Overview & Market Share' | 'QoS & Performance' | 'Infrastructure & BTS' | 'District Ranking & Outages'>('Overview & Market Share');
+  const [telcoSubTab, setTelcoSubTab] = useState<
+    'Overview & Market Share' | 'License & SLA Cross-Check' | 'IIG BGP & Hurricane Report' | 'QoS & Performance' | 'Infrastructure & BTS' | 'District Ranking & Outages'
+  >('Overview & Market Share');
   const [districtSearch, setDistrictSearch] = useState('');
   const [electricitySubTab, setElectricitySubTab] = useState<
     'Grid Balance & Overview' | 'Fuel Mix & Imports' | 'Hourly Demand Curves' | 'PowerGrid Historical Log'
@@ -270,6 +282,8 @@ export default function Home() {
   const [divisionsData, setDivisionsData] = useState<DivisionTelemetry[]>(INITIAL_DIVISIONS);
   const [operatorsData, setOperatorsData] = useState<OperatorTelemetry[]>(INITIAL_OPERATORS);
   const [cablesData, setCablesData] = useState<SubseaCableStatus[]>(INITIAL_CABLES);
+  const [slaOperators, setSlaOperators] = useState<OperatorSLAData[]>(INITIAL_LICENSE_SLA_OPERATORS);
+  const [bgpReports, setBgpReports] = useState<IIGBGPReport[]>(INITIAL_IIG_BGP_REPORTS);
   const [eventsLog, setEventsLog] = useState<TelemetryEvent[]>([
     { id: 'EVT-1001', timestamp: '16:11:00 BST', sector: 'System', severity: 'Info', division: 'National', message: 'Real-time telemetry pipeline initialized for ICT Ministry.' },
   ]);
@@ -284,12 +298,17 @@ export default function Home() {
       setDivisionsData(next.divisions);
       setOperatorsData(next.operators);
       setCablesData(next.cables);
+
+      const nextSlaBgp = tickLicenseAndBgpTelemetry(slaOperators, bgpReports);
+      setSlaOperators(nextSlaBgp.slaList);
+      setBgpReports(nextSlaBgp.bgpList);
+
       if (next.event) {
         setEventsLog((prev) => [next.event!, ...prev.slice(0, 19)]);
       }
     }, 2500 / speed);
     return () => clearInterval(interval);
-  }, [isStreaming, scenario, speed, divisionsData, operatorsData, cablesData]);
+  }, [isStreaming, scenario, speed, divisionsData, operatorsData, cablesData, slaOperators, bgpReports]);
 
   useEffect(() => {
     setDark(localStorage.getItem('central-eye-theme') !== 'light');
@@ -346,8 +365,8 @@ export default function Home() {
           },
           { signal: life.signal }
         )
-      ).catch(() => {});
-    } catch {}
+      ).catch(() => { });
+    } catch { }
     return () => life.abort();
   }, []);
 
@@ -500,8 +519,8 @@ export default function Home() {
                 (sector === 'Electricity'
                   ? POWER_GRID_LINES
                   : sector === 'Telecom'
-                  ? OPTICAL_FIBER_ROUTES
-                  : [...POWER_GRID_LINES, ...OPTICAL_FIBER_ROUTES]
+                    ? OPTICAL_FIBER_ROUTES
+                    : [...POWER_GRID_LINES, ...OPTICAL_FIBER_ROUTES]
                 ).map(([fromId, toId], idx) => {
                   const fromAsset = assets.find((a) => a.id === fromId);
                   const toAsset = assets.find((a) => a.id === toId);
@@ -862,67 +881,67 @@ export default function Home() {
             <div className="metrics">
               {isTelcoView
                 ? [
-                    {
-                      label: 'টেলিডেনসিটি (Teledensity)',
-                      value: `${BTRC_METADATA.metrics.teledensity_pct}`,
-                      unit: '%',
-                      icon: Signal,
-                      sub: `ইন্টারনেট পেনেট্রেশন: ${BTRC_METADATA.metrics.internet_penetration_pct}%`,
-                      detail: `ফিক্সড ব্রডব্যান্ড: 8.63% · মোবাইল: 68.79%`,
-                      color: '#65c7ab',
-                      id: 'Mobile subscriptions',
-                    },
-                    {
-                      label: 'মোট মোবাইল গ্রাহক (Subscribers)',
-                      value: `${BTRC_METADATA.metrics.total_mobile_subs_m}`,
-                      unit: 'Million',
-                      icon: Users,
-                      sub: `GP 87.0M · Robi 58.8M · BL 37.8M · TT 6.8M`,
-                      detail: `সক্রিয় সিম সংযোগ (BTRC Official)`,
-                      color: '#70b8f4',
-                      id: 'Mobile subscriptions',
-                    },
-                    {
-                      label: 'মোট ইন্টারনেট গ্রাহক (Internet)',
-                      value: `${BTRC_METADATA.metrics.total_internet_subs_m}`,
-                      unit: 'Million',
-                      icon: Globe2,
-                      sub: `মোবাইল: 121.52M · আইএসপি: 15.23M`,
-                      detail: `৭৭.৪২% জাতীয় ইন্টারনেট ব্যবহারকারী`,
-                      color: '#6ccaff',
-                      id: 'Subsea Cable Bandwidth',
-                    },
-                    {
-                      label: 'অপারেটর টাওয়ার সংখ্যা (Towers)',
-                      value: `${BTRC_METADATA.metrics.total_towers.toLocaleString()}`,
-                      unit: 'Towers',
-                      icon: Server,
-                      sub: `টাওয়ারকো: 24,728 (53%) · এমএনও: 21,882 (47%)`,
-                      detail: `ফাইবার: 179,775 কি.মি. · তরঙ্গ: 406.6 MHz`,
-                      color: '#e6b561',
-                      id: 'Subsea Cable Bandwidth',
-                    },
-                  ].map((m, i) => (
-                    <button className="metric panel" key={m.label} onClick={() => setSource(m.id)}>
-                      <div className="metric-label">
-                        <span>{m.label}</span>
-                        <m.icon size={17} style={{ color: m.color }} />
-                      </div>
-                      <div className="metric-value">
-                        {m.value}
-                        <span>{m.unit}</span>
-                      </div>
-                      <div className="metric-detail" style={{ color: m.color }}>
-                        <span>•</span> {m.detail}
-                      </div>
-                      <div className="metric-bottom">
-                        <span>{m.sub}</span>
-                        <Spark color={m.color} />
-                      </div>
-                    </button>
-                  ))
+                  {
+                    label: 'টেলিডেনসিটি (Teledensity)',
+                    value: `${BTRC_METADATA.metrics.teledensity_pct}`,
+                    unit: '%',
+                    icon: Signal,
+                    sub: `ইন্টারনেট পেনেট্রেশন: ${BTRC_METADATA.metrics.internet_penetration_pct}%`,
+                    detail: `ফিক্সড ব্রডব্যান্ড: 8.63% · মোবাইল: 68.79%`,
+                    color: '#65c7ab',
+                    id: 'Mobile subscriptions',
+                  },
+                  {
+                    label: 'মোট মোবাইল গ্রাহক (Subscribers)',
+                    value: `${BTRC_METADATA.metrics.total_mobile_subs_m}`,
+                    unit: 'Million',
+                    icon: Users,
+                    sub: `GP 87.0M · Robi 58.8M · BL 37.8M · TT 6.8M`,
+                    detail: `সক্রিয় সিম সংযোগ (BTRC Official)`,
+                    color: '#70b8f4',
+                    id: 'Mobile subscriptions',
+                  },
+                  {
+                    label: 'মোট ইন্টারনেট গ্রাহক (Internet)',
+                    value: `${BTRC_METADATA.metrics.total_internet_subs_m}`,
+                    unit: 'Million',
+                    icon: Globe2,
+                    sub: `মোবাইল: 121.52M · আইএসপি: 15.23M`,
+                    detail: `৭৭.৪২% জাতীয় ইন্টারনেট ব্যবহারকারী`,
+                    color: '#6ccaff',
+                    id: 'Subsea Cable Bandwidth',
+                  },
+                  {
+                    label: 'অপারেটর টাওয়ার সংখ্যা (Towers)',
+                    value: `${BTRC_METADATA.metrics.total_towers.toLocaleString()}`,
+                    unit: 'Towers',
+                    icon: Server,
+                    sub: `টাওয়ারকো: 24,728 (53%) · এমএনও: 21,882 (47%)`,
+                    detail: `ফাইবার: 179,775 কি.মি. · তরঙ্গ: 406.6 MHz`,
+                    color: '#e6b561',
+                    id: 'Subsea Cable Bandwidth',
+                  },
+                ].map((m, i) => (
+                  <button className="metric panel" key={m.label} onClick={() => setSource(m.id)}>
+                    <div className="metric-label">
+                      <span>{m.label}</span>
+                      <m.icon size={17} style={{ color: m.color }} />
+                    </div>
+                    <div className="metric-value">
+                      {m.value}
+                      <span>{m.unit}</span>
+                    </div>
+                    <div className="metric-detail" style={{ color: m.color }}>
+                      <span>•</span> {m.detail}
+                    </div>
+                    <div className="metric-bottom">
+                      <span>{m.sub}</span>
+                      <Spark color={m.color} />
+                    </div>
+                  </button>
+                ))
                 : page === 'Electricity'
-                ? [
+                  ? [
                     {
                       label: 'Substation Demand',
                       value: POWERGRID_METADATA.latest_entry.demand_mw.toLocaleString(),
@@ -982,7 +1001,7 @@ export default function Home() {
                       </div>
                     </button>
                   ))
-                : [
+                  : [
                     {
                       label: 'National Power Shortage',
                       value: totalShortage.toLocaleString(),
@@ -1709,8 +1728,8 @@ export default function Home() {
                         pgFilterRemark === 'All'
                           ? true
                           : pgFilterRemark === 'Peaks'
-                          ? r.remark && r.remark.toLowerCase().includes('peak')
-                          : r.loadshed_mw >= 2000;
+                            ? r.remark && r.remark.toLowerCase().includes('peak')
+                            : r.loadshed_mw >= 2000;
                       return matchSearch && matchRemark;
                     });
 
@@ -2177,6 +2196,14 @@ export default function Home() {
                 </Table>
               </div>
             </section>
+          )}
+
+          {page === 'SLA Cross-Check' && (
+            <SLACrossCheckView slaOperators={slaOperators} />
+          )}
+
+          {page === 'IIG BGP Peering' && (
+            <BGPHurricaneReportView bgpReports={bgpReports} />
           )}
 
           <footer className="page-footer">
