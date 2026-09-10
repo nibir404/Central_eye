@@ -15,6 +15,8 @@ import {
   BarChart,
   Bar,
   Cell,
+  PieChart,
+  Pie,
 } from 'recharts';
 import {
   Network,
@@ -30,7 +32,9 @@ import {
   AlertTriangle,
   Radio,
   Server,
-  Info,
+  PieChart as PieIcon,
+  BarChart3,
+  Cpu,
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
@@ -78,6 +82,16 @@ export default function BGPHurricaneReportView({ bgpReports }: Props) {
       });
     });
     return Object.entries(counts).map(([name, count]) => ({ name, count }));
+  }, [bgpReports]);
+
+  // IPv4 vs IPv6 BGP Session Ratio Donut Chart
+  const ipVersionRatio = useMemo(() => {
+    const totalV4 = bgpReports.reduce((acc, b) => acc + b.adjacenciesIPv4, 0);
+    const totalV6 = bgpReports.reduce((acc, b) => acc + b.adjacenciesIPv6, 0);
+    return [
+      { name: 'IPv4 BGP Sessions', value: totalV4, color: '#ecb663' },
+      { name: 'IPv6 BGP Sessions', value: totalV6, color: '#56c4ac' },
+    ];
   }, [bgpReports]);
 
   return (
@@ -233,16 +247,10 @@ export default function BGPHurricaneReportView({ bgpReports }: Props) {
               <rect width="100%" height="100%" fill="url(#grid)" />
 
               {/* Connecting BGP Lines to Core HE Node */}
-              {/* Core Node: HE (350, 60) */}
-              {/* BSCCL (100, 180) */}
               <line x1="350" y1="60" x2="100" y2="180" stroke="#ecb663" strokeWidth="2" strokeDasharray="4 2" className="animate-pulse" />
-              {/* Summit (220, 200) */}
               <line x1="350" y1="60" x2="220" y2="200" stroke="#62baf4" strokeWidth="2" />
-              {/* Fiber@Home (350, 210) */}
               <line x1="350" y1="60" x2="350" y2="210" stroke="#56c4ac" strokeWidth="2" />
-              {/* Mango (480, 200) */}
               <line x1="350" y1="60" x2="480" y2="200" stroke="#ac9af2" strokeWidth="1.5" />
-              {/* Novocom (600, 180) */}
               <line x1="350" y1="60" x2="600" y2="180" stroke="#67caae" strokeWidth="1.5" />
 
               {/* Connecting Lines to Downstream IXP / Cable Landing */}
@@ -319,7 +327,7 @@ export default function BGPHurricaneReportView({ bgpReports }: Props) {
                 </text>
               </g>
 
-              {/* Bottom Nodes: Downstream IXP / SMW4 Landing */}
+              {/* Bottom Nodes */}
               <g transform="translate(150, 290)">
                 <rect x="-40" y="-12" width="80" height="24" rx="12" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.2)" />
                 <text y="4" textAnchor="middle" fill="#fff" fontSize="9">
@@ -385,6 +393,82 @@ export default function BGPHurricaneReportView({ bgpReports }: Props) {
                   ))}
                 </Scatter>
               </ScatterChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+      </div>
+
+      {/* Visual Analytics Row 2: IPv4 vs IPv6 Donut + Upstream Tier-1 Bar Chart */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', gap: '20px' }}>
+        {/* Visual 3: IPv4 vs IPv6 BGP Session Ratio Donut Chart */}
+        <section className="panel data-panel">
+          <div className="section-top" style={{ marginBottom: '12px' }}>
+            <div>
+              <h2 style={{ fontSize: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <PieIcon size={18} color="#ecb663" />
+                IPv4 vs. IPv6 BGP Session Ratio (Donut Chart)
+              </h2>
+              <p className="metadata" style={{ margin: '4px 0 0 0' }}>
+                Dual-stack BGP session distribution across all Bangladesh IIG Autonomous Systems.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ width: '100%', height: '240px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={ipVersionRatio}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {ipVersionRatio.map((entry) => (
+                    <Cell key={entry.name} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    background: 'rgba(15, 23, 42, 0.95)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    color: '#fff',
+                    fontSize: '12px',
+                  }}
+                  formatter={(val: any, name: string) => [`${val} BGP Sessions`, name]}
+                />
+                <Legend wrapperStyle={{ fontSize: '11px' }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+
+        {/* Visual 4: Upstream Tier-1 Carrier Market Share Bar Chart */}
+        <section className="panel data-panel">
+          <div className="section-top" style={{ marginBottom: '12px' }}>
+            <div>
+              <h2 style={{ fontSize: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <BarChart3 size={18} color="#62baf4" />
+                Upstream Tier-1 Carrier Share (Bar Chart)
+              </h2>
+              <p className="metadata" style={{ margin: '4px 0 0 0' }}>
+                Number of Bangladesh IIG operators connected to global Tier-1 providers.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ width: '100%', height: '240px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={tier1Distribution} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
+                <XAxis dataKey="name" stroke="var(--muted-foreground)" fontSize={11} />
+                <YAxis stroke="var(--muted-foreground)" fontSize={11} />
+                <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid var(--border)', fontSize: '12px' }} />
+                <Bar dataKey="count" name="IIG Operators Connected" fill="#62baf4" radius={[4, 4, 0, 0]} />
+              </BarChart>
             </ResponsiveContainer>
           </div>
         </section>

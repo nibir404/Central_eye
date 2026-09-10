@@ -19,28 +19,40 @@ import {
   Radar,
   Cell,
   BarChart,
+  PieChart,
+  Pie,
+  AreaChart,
+  Area,
 } from 'recharts';
 import {
   ShieldAlert,
   ShieldCheck,
   CheckCircle2,
   AlertTriangle,
-  AlertOctagon,
   Search,
-  SlidersHorizontal,
   ExternalLink,
   Activity,
   FileCheck,
-  Users,
-  Clock,
-  ChevronDown,
-  Info,
-  RefreshCw,
+  PieChart as PieIcon,
+  BarChart3,
+  TrendingDown,
+  Layers,
+  Gauge,
+  SlidersHorizontal,
 } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
 type Props = {
   slaOperators: OperatorSLAData[];
+};
+
+const CATEGORY_COLORS: Record<string, string> = {
+  MNO: '#62baf4',
+  IIG: '#56c4ac',
+  ICX: '#ac9af2',
+  IGW: '#ecb663',
+  'ANS / ISP': '#67caae',
+  NTTN: '#f87171',
 };
 
 export default function SLACrossCheckView({ slaOperators }: Props) {
@@ -67,16 +79,19 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
 
   // Executive Summary Metrics
   const metrics = useMemo(() => {
-    if (slaOperators.length === 0) return { avgSelf: 0, avgCross: 0, avgDelta: 0, breachCount: 0 };
+    if (slaOperators.length === 0) return { avgSelf: 0, avgCross: 0, avgDelta: 0, breachCount: 0, riskIndex: 0 };
     const totalSelf = slaOperators.reduce((acc, curr) => acc + curr.selfReportedUptime, 0);
     const totalCross = slaOperators.reduce((acc, curr) => acc + curr.customerCrossCheckedUptime, 0);
     const totalDelta = slaOperators.reduce((acc, curr) => acc + curr.discrepancyDelta, 0);
     const breachCount = slaOperators.filter((op) => op.status === 'SLA Breach Flagged' || op.status === 'Under Audit').length;
+    const avgDelta = totalDelta / slaOperators.length;
+    const riskIndex = Math.min(100, Math.round(Math.abs(avgDelta) * 45 + (breachCount / slaOperators.length) * 55));
     return {
       avgSelf: (totalSelf / slaOperators.length).toFixed(2),
       avgCross: (totalCross / slaOperators.length).toFixed(2),
-      avgDelta: (totalDelta / slaOperators.length).toFixed(2),
+      avgDelta: avgDelta.toFixed(2),
       breachCount,
+      riskIndex,
     };
   }, [slaOperators]);
 
@@ -92,6 +107,15 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
       status: op.status,
     }));
   }, [filteredOperators]);
+
+  // Data for Category Distribution Pie Chart (Donut Chart)
+  const categoryPieData = useMemo(() => {
+    const cats: LicenseCategory[] = ['MNO', 'IIG', 'ICX', 'IGW', 'ANS / ISP', 'NTTN'];
+    return cats.map((cat) => {
+      const count = slaOperators.filter((o) => o.category === cat).length;
+      return { name: cat, value: count, color: CATEGORY_COLORS[cat] || '#62baf4' };
+    });
+  }, [slaOperators]);
 
   // Data for License Category Radar Chart
   const categoryRadarData = useMemo(() => {
@@ -111,12 +135,26 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
     });
   }, [slaOperators]);
 
+  // Data for 24-hour Trend Area Chart
+  const areaTrendData = useMemo(() => {
+    const hours = ['T-6h', 'T-5h', 'T-4h', 'T-3h', 'T-2h', 'T-1h', 'Now'];
+    return hours.map((h, i) => {
+      const avgCross = slaOperators.reduce((acc, op) => acc + (op.trend24h[i] || op.customerCrossCheckedUptime), 0) / slaOperators.length;
+      const avgSelf = slaOperators.reduce((acc, op) => acc + op.selfReportedUptime, 0) / slaOperators.length;
+      return {
+        time: h,
+        'Validated Customer Uptime': parseFloat(avgCross.toFixed(2)),
+        'Claimed Self Uptime': parseFloat(avgSelf.toFixed(2)),
+      };
+    });
+  }, [slaOperators]);
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       {/* Header Banner */}
       <div
         style={{
-          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.9), rgba(15, 23, 42, 0.95))',
+          background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98))',
           border: '1px solid var(--border)',
           borderRadius: '14px',
           padding: '24px',
@@ -157,11 +195,11 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '6px',
+              gap: '8px',
               background: 'var(--subtle)',
               border: '1px solid var(--border)',
               borderRadius: '8px',
-              padding: '6px 12px',
+              padding: '8px 14px',
               fontSize: '12px',
               color: 'var(--foreground)',
             }}
@@ -173,7 +211,7 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
       </div>
 
       {/* KPI Cards Bar */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '16px' }}>
         <div className="panel data-panel" style={{ padding: '16px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--muted-foreground)', fontSize: '12px', fontWeight: 600 }}>
             <span>TOTAL LICENSEES</span>
@@ -187,7 +225,7 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
 
         <div className="panel data-panel" style={{ padding: '16px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--muted-foreground)', fontSize: '12px', fontWeight: 600 }}>
-            <span>AVG SELF-REPORTED UPTIME</span>
+            <span>AVG CLAIMED UPTIME</span>
             <Activity size={16} color="#ac9af2" />
           </div>
           <div style={{ fontSize: '26px', fontWeight: 800, marginTop: '8px', color: '#ac9af2' }}>
@@ -198,7 +236,7 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
 
         <div className="panel data-panel" style={{ padding: '16px 20px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'var(--muted-foreground)', fontSize: '12px', fontWeight: 600 }}>
-            <span>CUSTOMER CROSS-CHECKED UPTIME</span>
+            <span>CUSTOMER CROSS-CHECKED</span>
             <CheckCircle2 size={16} color="#56c4ac" />
           </div>
           <div style={{ fontSize: '26px', fontWeight: 800, marginTop: '8px', color: '#56c4ac' }}>
@@ -237,7 +275,7 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
           <div className="section-top" style={{ marginBottom: '16px' }}>
             <div>
               <h2 style={{ fontSize: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Activity size={18} color="#62baf4" />
+                <BarChart3 size={18} color="#62baf4" />
                 Self-Reported vs. Customer Cross-Checked Uptime (%)
               </h2>
               <p className="metadata" style={{ margin: '4px 0 0 0' }}>
@@ -312,6 +350,138 @@ export default function SLACrossCheckView({ slaOperators }: Props) {
                 <Legend wrapperStyle={{ fontSize: '12px' }} />
               </RadarChart>
             </ResponsiveContainer>
+          </div>
+        </section>
+      </div>
+
+      {/* Visual Analytics Row 2: Pie Donut Chart + Area Trend + SVG Risk Gauge Diagram */}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '20px' }}>
+        {/* Visual 3: License Category Share Pie/Donut Chart */}
+        <section className="panel data-panel">
+          <div className="section-top" style={{ marginBottom: '12px' }}>
+            <div>
+              <h2 style={{ fontSize: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <PieIcon size={18} color="#56c4ac" />
+                License Category Distribution (Pie / Donut)
+              </h2>
+              <p className="metadata" style={{ margin: '4px 0 0 0' }}>
+                Share of active operators monitored per regulatory license tier.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ width: '100%', height: '240px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={categoryPieData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={85}
+                  paddingAngle={4}
+                  dataKey="value"
+                >
+                  {categoryPieData.map((entry) => (
+                    <Cell key={entry.name} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip
+                  contentStyle={{
+                    background: 'rgba(15, 23, 42, 0.95)',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    color: '#fff',
+                    fontSize: '12px',
+                  }}
+                  formatter={(val: any, name: string) => [`${val} Operators`, name]}
+                />
+                <Legend wrapperStyle={{ fontSize: '11px' }} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+
+        {/* Visual 4: 24-Hour Verified SLA Trend Area Chart */}
+        <section className="panel data-panel">
+          <div className="section-top" style={{ marginBottom: '12px' }}>
+            <div>
+              <h2 style={{ fontSize: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Activity size={18} color="#62baf4" />
+                24-Hour National Verified Uptime Trend (Area)
+              </h2>
+              <p className="metadata" style={{ margin: '4px 0 0 0' }}>
+                Continuous SLA validation trend comparing claimed vs customer cross-checked availability.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ width: '100%', height: '240px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={areaTrendData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="colorCross" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#56c4ac" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="#56c4ac" stopOpacity={0.1} />
+                  </linearGradient>
+                  <linearGradient id="colorSelf" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#62baf4" stopOpacity={0.5} />
+                    <stop offset="95%" stopColor="#62baf4" stopOpacity={0.05} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.08)" />
+                <XAxis dataKey="time" stroke="var(--muted-foreground)" fontSize={10} />
+                <YAxis domain={[95, 100]} stroke="var(--muted-foreground)" fontSize={10} />
+                <Tooltip contentStyle={{ background: '#0f172a', border: '1px solid var(--border)', fontSize: '12px' }} />
+                <Area type="monotone" dataKey="Validated Customer Uptime" stroke="#56c4ac" fillOpacity={1} fill="url(#colorCross)" />
+                <Area type="monotone" dataKey="Claimed Self Uptime" stroke="#62baf4" fillOpacity={1} fill="url(#colorSelf)" />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+
+        {/* Visual 5: SVG SLA Discrepancy Risk Gauge Meter */}
+        <section className="panel data-panel">
+          <div className="section-top" style={{ marginBottom: '12px' }}>
+            <div>
+              <h2 style={{ fontSize: '15px', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Gauge size={18} color="#ecb663" />
+                National Discrepancy Risk Gauge Diagram
+              </h2>
+              <p className="metadata" style={{ margin: '4px 0 0 0' }}>
+                Calculated risk score based on SLA inflation and audit penalty flags.
+              </p>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '240px' }}>
+            <svg width="220" height="130" viewBox="0 0 200 120">
+              <path d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="16" strokeLinecap="round" />
+              <path
+                d="M 20 100 A 80 80 0 0 1 180 100"
+                fill="none"
+                stroke={metrics.riskIndex > 50 ? '#f87171' : metrics.riskIndex > 25 ? '#ecb663' : '#56c4ac'}
+                strokeWidth="16"
+                strokeLinecap="round"
+                strokeDasharray={`${(metrics.riskIndex / 100) * 251} 251`}
+              />
+              {/* Needle Indicator */}
+              <g transform={`rotate(${-90 + (metrics.riskIndex / 100) * 180}, 100, 100)`}>
+                <line x1="100" y1="100" x2="100" y2="35" stroke="#fff" strokeWidth="3" strokeLinecap="round" />
+                <circle cx="100" cy="100" r="6" fill="#fff" />
+              </g>
+              <text x="100" y="90" textAnchor="middle" fill="#fff" fontSize="24" fontWeight="bold">
+                {metrics.riskIndex}%
+              </text>
+              <text x="100" y="112" textAnchor="middle" fill="var(--muted-foreground)" fontSize="10">
+                SLA Inflation Risk Level
+              </text>
+            </svg>
+            <div style={{ display: 'flex', gap: '16px', fontSize: '11px', marginTop: '10px' }}>
+              <span style={{ color: '#56c4ac' }}>● Low (0-25%)</span>
+              <span style={{ color: '#ecb663' }}>● Moderate (26-50%)</span>
+              <span style={{ color: '#f87171' }}>● High Risk (51-100%)</span>
+            </div>
           </div>
         </section>
       </div>
