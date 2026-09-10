@@ -96,6 +96,7 @@ import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@
 import { Progress } from '@/components/ui/progress';
 import { INFRASTRUCTURE_ASSETS, InfrastructureAsset } from '@/lib/infrastructure-assets';
 import BtrcTelecomViews from '@/components/btrc-telecom-views';
+import PowerGridVisuals from '@/components/powergrid-visuals';
 import {
   BTRC_METADATA,
   TELCO_SUBMENU_ITEMS,
@@ -1200,6 +1201,9 @@ export default function Home() {
                   </button>
                 </div>
               </div>
+
+              {/* PowerGrid Visual Infographics, Donut Charts & 24-Hour Area Telemetry */}
+              <PowerGridVisuals />
 
               {/* Electricity Sub-Navigation Bar */}
               <div style={{ display: 'flex', gap: '10px', borderBottom: '1px solid var(--border)', paddingBottom: '12px', flexWrap: 'wrap' }}>

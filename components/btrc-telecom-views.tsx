@@ -38,6 +38,22 @@ import {
 } from '@/lib/btrc-telecom';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
 import { Progress } from '@/components/ui/progress';
+import {
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+} from 'recharts';
 
 interface BtrcViewsProps {
   activeTab: TelcoSubMenuId;
@@ -575,13 +591,60 @@ function MobileSubscribersSection({
           ))}
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
-          {ops.map((op) => (
-            <div key={op.name} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11px' }}>
-              <i style={{ width: '10px', height: '10px', borderRadius: '50%', background: op.color, flexShrink: 0 }} />
-              <span>{op.name}: <strong>{op.subs}M</strong> ({op.share}%)</span>
+        {/* Interactive Visual Infographic Charts */}
+        <div style={{ display: 'grid', gridTemplateColumns: '220px 1fr', gap: '20px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)', alignItems: 'center' }}>
+          <div>
+            <h4 style={{ fontSize: '12px', fontWeight: 700, margin: '0 0 10px 0', textAlign: 'center' }}>Market Share Donut</h4>
+            <div style={{ width: '100%', height: '180px' }}>
+              <ResponsiveContainer minWidth={100} minHeight={180}>
+                <PieChart>
+                  <Pie
+                    data={ops.map((o) => ({ name: o.name.split(' ')[0], value: o.subs, color: o.color }))}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={45}
+                    outerRadius={75}
+                    paddingAngle={3}
+                    dataKey="value"
+                  >
+                    {ops.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    formatter={(val: any) => [`${Number(val).toFixed(2)}M SIMs`, 'Active Subs']}
+                    contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid var(--border)', borderRadius: '8px', color: '#fff', fontSize: '11px' }}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
             </div>
-          ))}
+          </div>
+
+          <div>
+            <h4 style={{ fontSize: '12px', fontWeight: 700, margin: '0 0 10px 0' }}>12-Month Operator Subscriber Growth Curves (Millions)</h4>
+            <div style={{ width: '100%', height: '180px' }}>
+              <ResponsiveContainer minWidth={100} minHeight={180}>
+                <AreaChart
+                  data={BTRC_MOBILE_SUBS.slice(0, 12).reverse().map((r) => ({
+                    month: r.month_en.split(' ')[0],
+                    Grameenphone: r.grameenphone_m,
+                    Robi: r.robi_m,
+                    Banglalink: r.banglalink_m,
+                    Teletalk: r.teletalk_m,
+                  }))}
+                  margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
+                >
+                  <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={10} tickLine={false} />
+                  <YAxis stroke="var(--muted-foreground)" fontSize={10} tickLine={false} unit="M" width={35} />
+                  <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid var(--border)', borderRadius: '8px', color: '#fff', fontSize: '11px' }} />
+                  <Area type="monotone" dataKey="Grameenphone" stroke="#319dde" fill="#319dde" fillOpacity={0.15} strokeWidth={2} />
+                  <Area type="monotone" dataKey="Robi" stroke="#ea3834" fill="#ea3834" fillOpacity={0.15} strokeWidth={2} />
+                  <Area type="monotone" dataKey="Banglalink" stroke="#f68b1e" fill="#f68b1e" fillOpacity={0.15} strokeWidth={2} />
+                  <Area type="monotone" dataKey="Teletalk" stroke="#25893b" fill="#25893b" fillOpacity={0.15} strokeWidth={2} />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -754,6 +817,30 @@ function InternetSubscribersSection({
             <i style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#f5ba67' }} />
             আইএসপি ও পিএসটিএন: <strong>{latest?.isp_pstn_m}M</strong> ({ispPct}%)
           </span>
+        </div>
+
+        {/* Recharts Internet Subscriber Trajectory Chart */}
+        <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+          <h4 style={{ fontSize: '12px', fontWeight: 700, margin: '0 0 10px 0' }}>Internet Subscribers Growth Trajectory (Millions)</h4>
+          <div style={{ width: '100%', height: '190px' }}>
+            <ResponsiveContainer minWidth={100} minHeight={190}>
+              <AreaChart
+                data={BTRC_INTERNET_SUBS.slice(0, 12).reverse().map((r) => ({
+                  month: r.month_en.split(' ')[0],
+                  'Mobile Internet': r.mobile_internet_m,
+                  'ISP Broadband': r.isp_pstn_m,
+                  Total: r.total_internet_m,
+                }))}
+                margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
+              >
+                <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={10} tickLine={false} />
+                <YAxis stroke="var(--muted-foreground)" fontSize={10} tickLine={false} unit="M" width={35} />
+                <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid var(--border)', borderRadius: '8px', color: '#fff', fontSize: '11px' }} />
+                <Area type="monotone" dataKey="Mobile Internet" stroke="#6ccaff" fill="#6ccaff" fillOpacity={0.2} strokeWidth={2} />
+                <Area type="monotone" dataKey="ISP Broadband" stroke="#f5ba67" fill="#f5ba67" fillOpacity={0.2} strokeWidth={2} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </section>
 
@@ -1686,6 +1773,37 @@ function SpectrumSection({ downloadCSV, downloadJSON }: any) {
           <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><i style={{ width: '10px', height: '10px', background: '#805ad5', borderRadius: '2px' }} /> 2100 MHz</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><i style={{ width: '10px', height: '10px', background: '#d69e2e', borderRadius: '2px' }} /> 2.3 GHz</span>
           <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}><i style={{ width: '10px', height: '10px', background: '#e53e3e', borderRadius: '2px' }} /> 2.6 GHz</span>
+        </div>
+
+        {/* Recharts Spectrum Comparison Bar Chart */}
+        <div style={{ marginTop: '20px', paddingTop: '16px', borderTop: '1px solid var(--border)' }}>
+          <h4 style={{ fontSize: '12px', fontWeight: 700, margin: '0 0 10px 0' }}>Operator Spectrum Holding Comparison (MHz)</h4>
+          <div style={{ width: '100%', height: '220px' }}>
+            <ResponsiveContainer minWidth={100} minHeight={220}>
+              <BarChart
+                data={spectrum.operators.map((op) => ({
+                  name: op.operator,
+                  '700MHz': op.band_700mhz,
+                  '900MHz': op.band_900mhz,
+                  '1800MHz': op.band_1800mhz,
+                  '2100MHz': op.band_2100mhz,
+                  '2.3GHz': op.band_2_3ghz,
+                  '2.6GHz': op.band_2_6ghz,
+                }))}
+                margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+              >
+                <XAxis dataKey="name" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} />
+                <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} unit=" MHz" width={55} />
+                <Tooltip contentStyle={{ background: 'rgba(15,23,42,0.95)', border: '1px solid var(--border)', borderRadius: '8px', color: '#fff', fontSize: '11px' }} />
+                <Bar dataKey="700MHz" fill="#3182ce" stackId="a" />
+                <Bar dataKey="900MHz" fill="#38a169" stackId="a" />
+                <Bar dataKey="1800MHz" fill="#dd6b20" stackId="a" />
+                <Bar dataKey="2100MHz" fill="#805ad5" stackId="a" />
+                <Bar dataKey="2.3GHz" fill="#d69e2e" stackId="a" />
+                <Bar dataKey="2.6GHz" fill="#e53e3e" stackId="a" />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </section>
 
